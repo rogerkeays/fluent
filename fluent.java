@@ -27,7 +27,7 @@ public class fluent implements Plugin {
         }
     }
 
-    // transform the ast when an extension method is called
+    // transform the ast when an extension method (ending in EX) is called
     @Override public void init(JavacTask task, String... args) {
         TreeMaker make = TreeMaker.instance(((BasicJavacTask) task).getContext());
         task.addTaskListener(new TaskListener() {
@@ -39,7 +39,7 @@ public class fluent implements Plugin {
                             if (node.getMethodSelect() instanceof JCFieldAccess)  {
                                 JCMethodInvocation call = (JCMethodInvocation) node;
                                 JCFieldAccess lhs = (JCFieldAccess) node.getMethodSelect();
-                                if (lhs.getIdentifier().toString().equals("duplicate")) {
+                                if (lhs.getIdentifier().toString().endsWith("EX")) {
                                     call.meth = make.at(call.pos).Ident(lhs.getIdentifier());
                                     call.args = call.args.prepend(lhs.getExpression());
                                 }
