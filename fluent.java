@@ -11,18 +11,18 @@ import sun.misc.Unsafe;
 
 public class fluent implements Plugin {
     public fluent() {
-		try {
+        try {
             // open access to compiler internals
             Module fluentModule = fluent.class.getModule();
             Module compilerModule = ModuleLayer.boot().findModule("jdk.compiler").get();
-			Method open = Module.class.getDeclaredMethod("implAddOpens", String.class, Module.class);
-			Field f = Unsafe.class.getDeclaredField("theUnsafe"); f.setAccessible(true);
-		    Unsafe unsafe = (Unsafe) f.get(null);
-			unsafe.putBoolean(open, 12, true); // make it public
+            Method open = Module.class.getDeclaredMethod("implAddOpens", String.class, Module.class);
+            Field f = Unsafe.class.getDeclaredField("theUnsafe"); f.setAccessible(true);
+            Unsafe unsafe = (Unsafe) f.get(null);
+            unsafe.putBoolean(open, 12, true); // make it public
             open.invoke(compilerModule, "com.sun.tools.javac.api", fluentModule);
             open.invoke(compilerModule, "com.sun.tools.javac.tree", fluentModule);
             open.invoke(compilerModule, "com.sun.tools.javac.util", fluentModule);
-		} catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
