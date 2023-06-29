@@ -9,7 +9,9 @@ public class test {
 
         String hello = "hello";
         out.println(hello.duplicate());
-        out.println(hello.duplicate(3));
+        out.println(hello.duplicate(3, 4));
+        out.println(hello.duplicate().duplicate());
+        out.println(hello.duplicate().duplicate().duplicate());
     }
 
     public static String duplicate(String x) {
