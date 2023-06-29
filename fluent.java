@@ -27,6 +27,7 @@ public class fluent implements Plugin {
         }
     }
 
+    // transform the ast when an extension method is called
     @Override public void init(JavacTask task, String... args) {
         TreeMaker make = TreeMaker.instance(((BasicJavacTask) task).getContext());
         task.addTaskListener(new TaskListener() {
