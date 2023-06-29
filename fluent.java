@@ -40,7 +40,7 @@ public class fluent implements Plugin {
                                 JCMethodInvocation call = (JCMethodInvocation) node;
                                 JCFieldAccess lhs = (JCFieldAccess) node.getMethodSelect();
                                 if (lhs.getIdentifier().toString().equals("duplicate")) {
-                                    call.meth = make.Ident(lhs.getIdentifier());
+                                    call.meth = make.at(call.pos).Ident(lhs.getIdentifier());
                                     call.args = call.args.prepend(lhs.getExpression());
                                 }
                             }
