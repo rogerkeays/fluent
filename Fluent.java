@@ -82,8 +82,6 @@ public class Fluent implements Plugin {
         }
     }
 
-    @Override public String getName() { return "fluent"; }
-
     public static class ResolveExtensions extends Resolve {
         protected ResolveExtensions(Context context) {
             super(context);
@@ -105,4 +103,6 @@ public class Fluent implements Plugin {
             return super.findMethod(env, site, name, argtypes, typeargtypes, allowBoxing, useVarargs);
         }
     }
+
+    @Override public String getName() { return "fluent"; }
 }
