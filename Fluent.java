@@ -13,12 +13,12 @@ import java.lang.reflect.Field;
 import java.io.InputStream;
 import sun.misc.Unsafe;
 
-public class fluent implements Plugin {
+public class Fluent implements Plugin {
     @Override 
     public void init(JavacTask task, String... args) {
         try {
             // open access to compiler internals, bypassing module restrictions
-            Module fluentModule = fluent.class.getModule();
+            Module fluentModule = Fluent.class.getModule();
             Module compilerModule = ModuleLayer.boot().findModule("jdk.compiler").get();
             Module baseModule = ModuleLayer.boot().findModule("java.base").get();
             Method open = Module.class.getDeclaredMethod("implAddOpens", String.class, Module.class);
@@ -35,7 +35,7 @@ public class fluent implements Plugin {
             // reload extended classes using the package classloader
             // this is necessary to override methods in the extended class
             String name = ResolveExtensions.class.getName();
-            InputStream is = fluent.class.getClassLoader().getResourceAsStream(
+            InputStream is = Fluent.class.getClassLoader().getResourceAsStream(
                     name.replace('.', '/') + ".class");
             byte[] bytes = new byte[is.available()];
             is.read(bytes);
