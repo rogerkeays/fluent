@@ -68,9 +68,7 @@ public class fluent implements Plugin {
         task.addTaskListener(new TaskListener() {
             public void started(TaskEvent e) {
                 System.out.println(">>>> " + e.getKind());
-            }
-            public void finished(TaskEvent e) {
-                if (e.getKind() == TaskEvent.Kind.PARSE) {
+                if (e.getKind() == TaskEvent.Kind.ANALYZE) {
                     e.getCompilationUnit().accept(new TreeScanner<Void, Void>() {
                         @Override public Void visitMethodInvocation(MethodInvocationTree node, Void x) {
                             if (node.getMethodSelect() instanceof JCFieldAccess)  {
@@ -86,6 +84,7 @@ public class fluent implements Plugin {
                     }, null);
                 }
             }
+            public void finished(TaskEvent e) {}
         });
     }
 
@@ -109,6 +108,12 @@ public class fluent implements Plugin {
                       boolean allowBoxing,
                       boolean useVarargs) {
             System.out.println("findMethod " + name);
+StackTraceElement[] elements = Thread.currentThread().getStackTrace();
+for (int i = 1; i < elements.length; i++) {
+     StackTraceElement s = elements[i];
+     System.out.println("\tat " + s.getClassName() + "." + s.getMethodName() + "(" + s.getFileName() + ":" + s.getLineNumber() + ")");
+}
+
             return super.findMethod(env, site, name, argtypes, typeargtypes, allowBoxing, useVarargs);
         }
     }
