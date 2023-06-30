@@ -14,7 +14,8 @@ import java.io.InputStream;
 import sun.misc.Unsafe;
 
 public class fluent implements Plugin {
-    public fluent() {
+    @Override 
+    public void init(JavacTask task, String... args) {
         try {
             // open access to compiler internals, bypassing module restrictions
             Module fluentModule = fluent.class.getModule();
@@ -30,15 +31,7 @@ public class fluent implements Plugin {
             open.invoke(compilerModule, "com.sun.tools.javac.tree", fluentModule);
             open.invoke(compilerModule, "com.sun.tools.javac.util", fluentModule);
             open.invoke(baseModule, "java.lang", fluentModule);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
-    @Override 
-    public void init(JavacTask task, String... args) {
-        Context context = ((BasicJavacTask) task).getContext();
-        try {
             // reload extended classes using the package classloader
             // this is necessary to override methods in the extended class
             String name = ResolveExtensions.class.getName();
@@ -53,39 +46,40 @@ public class fluent implements Plugin {
                     name, bytes, 0, bytes.length);
 
             // patch extended classes into the compiler context
+            Context context = ((BasicJavacTask) task).getContext();
             Resolve resolver = (Resolve) resolverClass.getDeclaredMethod("instance", Context.class)
                     .invoke(null, context);
             Field field = Attr.class.getDeclaredField("rs");
             field.setAccessible(true);
             field.set(Attr.instance(context), resolver);
+
+            // transform the ast when an extension method (ending in EX) is called
+            TreeMaker make = TreeMaker.instance(context);
+            task.addTaskListener(new TaskListener() {
+                public void started(TaskEvent e) {
+                    System.out.println(">>>> " + e.getKind());
+                    if (e.getKind() == TaskEvent.Kind.ANALYZE) {
+                        e.getCompilationUnit().accept(new TreeScanner<Void, Void>() {
+                            @Override public Void visitMethodInvocation(MethodInvocationTree node, Void x) {
+                                if (node.getMethodSelect() instanceof JCFieldAccess)  {
+                                    JCMethodInvocation call = (JCMethodInvocation) node;
+                                    JCFieldAccess lhs = (JCFieldAccess) node.getMethodSelect();
+                                    if (lhs.getIdentifier().toString().endsWith("EX")) {
+                                        call.meth = make.at(call.pos).Ident(lhs.getIdentifier());
+                                        call.args = call.args.prepend(lhs.getExpression());
+                                    }
+                                }
+                                return super.visitMethodInvocation(node, x);
+                            }
+                        }, null);
+                    }
+                }
+                public void finished(TaskEvent e) {}
+            });
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
-
-        // transform the ast when an extension method (ending in EX) is called
-        TreeMaker make = TreeMaker.instance(context);
-        task.addTaskListener(new TaskListener() {
-            public void started(TaskEvent e) {
-                System.out.println(">>>> " + e.getKind());
-                if (e.getKind() == TaskEvent.Kind.ANALYZE) {
-                    e.getCompilationUnit().accept(new TreeScanner<Void, Void>() {
-                        @Override public Void visitMethodInvocation(MethodInvocationTree node, Void x) {
-                            if (node.getMethodSelect() instanceof JCFieldAccess)  {
-                                JCMethodInvocation call = (JCMethodInvocation) node;
-                                JCFieldAccess lhs = (JCFieldAccess) node.getMethodSelect();
-                                if (lhs.getIdentifier().toString().endsWith("EX")) {
-                                    call.meth = make.at(call.pos).Ident(lhs.getIdentifier());
-                                    call.args = call.args.prepend(lhs.getExpression());
-                                }
-                            }
-                            return super.visitMethodInvocation(node, x);
-                        }
-                    }, null);
-                }
-            }
-            public void finished(TaskEvent e) {}
-        });
     }
 
     @Override public String getName() { return "fluent"; }
@@ -108,12 +102,6 @@ public class fluent implements Plugin {
                       boolean allowBoxing,
                       boolean useVarargs) {
             System.out.println("findMethod " + name);
-StackTraceElement[] elements = Thread.currentThread().getStackTrace();
-for (int i = 1; i < elements.length; i++) {
-     StackTraceElement s = elements[i];
-     System.out.println("\tat " + s.getClassName() + "." + s.getMethodName() + "(" + s.getFileName() + ":" + s.getLineNumber() + ")");
-}
-
             return super.findMethod(env, site, name, argtypes, typeargtypes, allowBoxing, useVarargs);
         }
     }
