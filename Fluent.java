@@ -4,6 +4,7 @@ import com.sun.source.util.*;
 import com.sun.source.tree.*;
 import com.sun.tools.javac.api.*;
 import com.sun.tools.javac.code.*;
+import com.sun.tools.javac.main.*;
 import com.sun.tools.javac.tree.JCTree.*;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.*;
@@ -28,13 +29,14 @@ public class Fluent implements Plugin {
             open.invoke(compilerModule, "com.sun.tools.javac.api", fluentModule);
             open.invoke(compilerModule, "com.sun.tools.javac.code", fluentModule);
             open.invoke(compilerModule, "com.sun.tools.javac.comp", fluentModule);
+            open.invoke(compilerModule, "com.sun.tools.javac.main", fluentModule);
             open.invoke(compilerModule, "com.sun.tools.javac.tree", fluentModule);
             open.invoke(compilerModule, "com.sun.tools.javac.util", fluentModule);
             open.invoke(baseModule, "java.lang", fluentModule);
 
             // reload extended classes using the package classloader
             // this is necessary to override methods in the extended class
-            String name = ResolveExtensions.class.getName();
+            String name = FluentExtension.class.getName();
             InputStream is = Fluent.class.getClassLoader().getResourceAsStream(
                     name.replace('.', '/') + ".class");
             byte[] bytes = new byte[is.available()];
@@ -42,65 +44,51 @@ public class Fluent implements Plugin {
             Method m = ClassLoader.class.getDeclaredMethod("defineClass", new Class[] {
                     String.class, byte[].class, int.class, int.class });
             m.setAccessible(true);
-            Class resolverClass = (Class) m.invoke(Resolve.class.getClassLoader(), 
+            Class resolverClass = (Class) m.invoke(Attr.class.getClassLoader(), 
                     name, bytes, 0, bytes.length);
 
-            // patch extended classes into the compiler context
+            // patch extended classes into the compiler global state
             Context context = ((BasicJavacTask) task).getContext();
-            Resolve resolver = (Resolve) resolverClass.getDeclaredMethod("instance", Context.class)
+            Object fluent = resolverClass.getDeclaredMethod("instance", Context.class)
                     .invoke(null, context);
-            Field field = Attr.class.getDeclaredField("rs");
-            field.setAccessible(true);
-            field.set(Attr.instance(context), resolver);
-
-            // transform the ast when an extension method (ending in EX) is called
-            TreeMaker make = TreeMaker.instance(context);
-            task.addTaskListener(new TaskListener() {
-                public void started(TaskEvent e) {
-                    System.out.println(">>>> " + e.getKind());
-                    if (e.getKind() == TaskEvent.Kind.ANALYZE) {
-                        e.getCompilationUnit().accept(new TreeScanner<Void, Void>() {
-                            @Override public Void visitMethodInvocation(MethodInvocationTree node, Void x) {
-                                if (node.getMethodSelect() instanceof JCFieldAccess)  {
-                                    JCMethodInvocation call = (JCMethodInvocation) node;
-                                    JCFieldAccess lhs = (JCFieldAccess) node.getMethodSelect();
-                                    if (lhs.getIdentifier().toString().endsWith("EX")) {
-                                        call.meth = make.at(call.pos).Ident(lhs.getIdentifier());
-                                        call.args = call.args.prepend(lhs.getExpression());
-                                    }
-                                }
-                                return super.visitMethodInvocation(node, x);
-                            }
-                        }, null);
-                    }
-                }
-                public void finished(TaskEvent e) {}
-            });
+            for (Object component : List.of(
+                    JavaCompiler.instance(context),
+                    MemberEnter.instance(context), 
+                    Resolve.instance(context),
+                    ArgumentAttr.instance(context),
+                    DeferredAttr.instance(context),
+                    Analyzer.instance(context))) {
+                Field field = component.getClass().getDeclaredField("attr");
+                field.setAccessible(true);
+                field.set(component, fluent);
+            }
         } catch (Exception e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
 
-    public static class ResolveExtensions extends Resolve {
-        protected ResolveExtensions(Context context) {
-            super(context);
-        }
-        public static ResolveExtensions instance(Context context) {
-            context.put(resolveKey, (Resolve) null); // superclass constructor will put it back
-            return new ResolveExtensions(context);
-        }
+    public static class FluentExtension extends Attr {
+        Context context;
 
+        protected FluentExtension(Context context) {
+            super(context);
+            this.context = context;
+        }
+        public static FluentExtension instance(Context context) {
+            context.put(attrKey, (FluentExtension) null); // superclass constructor will put it back
+            return new FluentExtension(context);
+        }
+        
         @Override
-        Symbol findMethod(Env<AttrContext> env,
-                      Type site,
-                      Name name,
-                      List<Type> argtypes,
-                      List<Type> typeargtypes,
-                      boolean allowBoxing,
-                      boolean useVarargs) {
-            System.out.println("findMethod " + name);
-            return super.findMethod(env, site, name, argtypes, typeargtypes, allowBoxing, useVarargs);
+        public void visitApply(JCMethodInvocation tree) {
+            if (tree.getMethodSelect() instanceof JCFieldAccess) {
+                JCFieldAccess lhs = (JCFieldAccess) tree.getMethodSelect();
+                if (lhs.getIdentifier().toString().endsWith("EX")) {
+                    tree.args = tree.args.prepend(lhs.getExpression());
+                    tree.meth = TreeMaker.instance(context).at(tree.pos).Ident(lhs.getIdentifier());
+                }
+            }
+            super.visitApply(tree);
         }
     }
 
