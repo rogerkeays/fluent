@@ -7,7 +7,7 @@ TARGET=8
 echo "BUILDING"
 [ -d target ] && rm -r target
 mkdir -p target/META-INF/services
-echo "jamaica.fluent.fluent" > target/META-INF/services/com.sun.source.util.Plugin
+echo "com.sun.tools.javac.comp.fluent" > target/META-INF/services/com.sun.source.util.Plugin
 javac -source $TARGET -target $TARGET -d target fluent.java
 cd target; jar --create --file fluent.jar *
 cd ..

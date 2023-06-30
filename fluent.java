@@ -1,24 +1,25 @@
-package jamaica.fluent;
+package com.sun.tools.javac.comp;
 
 import com.sun.source.util.*;
 import com.sun.source.tree.*;
 import com.sun.tools.javac.api.*;
 import com.sun.tools.javac.code.*;
-import com.sun.tools.javac.comp.*;
 import com.sun.tools.javac.tree.JCTree.*;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.*;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import java.lang.reflect.Method;
 import java.lang.reflect.Field;
+import java.io.InputStream;
 import sun.misc.Unsafe;
 
 public class fluent implements Plugin {
     public fluent() {
         try {
-            // open access to compiler internals
+            // open access to compiler internals, bypassing module restrictions
             Module fluentModule = fluent.class.getModule();
             Module compilerModule = ModuleLayer.boot().findModule("jdk.compiler").get();
+            Module baseModule = ModuleLayer.boot().findModule("java.base").get();
             Method open = Module.class.getDeclaredMethod("implAddOpens", String.class, Module.class);
             Field f = Unsafe.class.getDeclaredField("theUnsafe"); f.setAccessible(true);
             Unsafe unsafe = (Unsafe) f.get(null);
@@ -28,18 +29,32 @@ public class fluent implements Plugin {
             open.invoke(compilerModule, "com.sun.tools.javac.comp", fluentModule);
             open.invoke(compilerModule, "com.sun.tools.javac.tree", fluentModule);
             open.invoke(compilerModule, "com.sun.tools.javac.util", fluentModule);
+            open.invoke(baseModule, "java.lang", fluentModule);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    @Override public void init(JavacTask task, String... args) {
-
-        // patch the compiler to use our custom resolver
-        // we can only override public methods
+    @Override 
+    public void init(JavacTask task, String... args) {
         Context context = ((BasicJavacTask) task).getContext();
         try {
-            Resolve resolver = ResolveExtensions.instance(context);
+            // reload extended classes using the package classloader
+            // this is necessary to override methods in the extended class
+            String name = ResolveExtensions.class.getName();
+            InputStream is = fluent.class.getClassLoader().getResourceAsStream(
+                    name.replace('.', '/') + ".class");
+            byte[] bytes = new byte[is.available()];
+            is.read(bytes);
+            Method m = ClassLoader.class.getDeclaredMethod("defineClass", new Class[] {
+                    String.class, byte[].class, int.class, int.class });
+            m.setAccessible(true);
+            Class resolverClass = (Class) m.invoke(Resolve.class.getClassLoader(), 
+                    name, bytes, 0, bytes.length);
+
+            // patch extended classes into the compiler context
+            Resolve resolver = (Resolve) resolverClass.getDeclaredMethod("instance", Context.class)
+                    .invoke(null, context);
             Field field = Attr.class.getDeclaredField("rs");
             field.setAccessible(true);
             field.set(Attr.instance(context), resolver);
@@ -81,34 +96,20 @@ public class fluent implements Plugin {
             super(context);
         }
         public static ResolveExtensions instance(Context context) {
-            context.put(resolveKey, (Resolve) null);
+            context.put(resolveKey, (Resolve) null); // superclass constructor will put it back
             return new ResolveExtensions(context);
         }
 
         @Override
-        public boolean isAccessible(Env<AttrContext> env,
-              Type site,
-              Symbol sym,
-              boolean checkInner) {
-            System.out.println("isAccessible " + sym);
-            return super.isAccessible(env, site, sym, checkInner);
-
-        }
-
-        @Override
-        public Symbol.VarSymbol resolveInternalField(DiagnosticPosition pos, Env<AttrContext> env,
-                                              Type site, Name name) {
-            System.out.println("resolveInternalField " + name);
-            return super.resolveInternalField(pos, env, site, name);
-        }
-
-        @Override
-        public Symbol.MethodSymbol resolveInternalMethod(DiagnosticPosition pos, Env<AttrContext> env,
-                                        Type site, Name name,
-                                        List<Type> argtypes,
-                                        List<Type> typeargtypes) {
-            System.out.println("resolveInternalMethod " + name);
-            return super.resolveInternalMethod(pos, env, site, name, argtypes, typeargtypes);
+        Symbol findMethod(Env<AttrContext> env,
+                      Type site,
+                      Name name,
+                      List<Type> argtypes,
+                      List<Type> typeargtypes,
+                      boolean allowBoxing,
+                      boolean useVarargs) {
+            System.out.println("findMethod " + name);
+            return super.findMethod(env, site, name, argtypes, typeargtypes, allowBoxing, useVarargs);
         }
     }
 }
