@@ -44,12 +44,12 @@ public class Fluent implements Plugin {
             Method m = ClassLoader.class.getDeclaredMethod("defineClass", new Class[] {
                     String.class, byte[].class, int.class, int.class });
             m.setAccessible(true);
-            Class resolverClass = (Class) m.invoke(Attr.class.getClassLoader(), 
+            Class fluentClass = (Class) m.invoke(Attr.class.getClassLoader(), 
                     name, bytes, 0, bytes.length);
 
             // patch extended classes into the compiler global state
             Context context = ((BasicJavacTask) task).getContext();
-            Object fluent = resolverClass.getDeclaredMethod("instance", Context.class)
+            Object fluent = fluentClass.getDeclaredMethod("instance", Context.class)
                     .invoke(null, context);
             for (Object component : List.of(
                     JavaCompiler.instance(context),
