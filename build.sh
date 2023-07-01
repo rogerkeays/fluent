@@ -12,6 +12,7 @@ TARGET=8
 
 # compile and build jar
 echo "===== BUILDING ====="
+echo $JAVA_HOME
 [ -d target ] && rm -r target
 mkdir -p target/META-INF/services
 echo "com.sun.tools.javac.comp.Fluent" > target/META-INF/services/com.sun.source.util.Plugin
@@ -23,6 +24,6 @@ echo "===== TESTING ====="
 for JDK in $JDKS; do
     echo $JDK
     "$JDK"/bin/javac -cp fluent.jar -Xplugin:fluent -d target test.java
-    "$JDK"/bin/java -cp target test
+    "$JDK"/bin/java -cp target -enableassertions test
 done
 

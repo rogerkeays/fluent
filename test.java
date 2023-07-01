@@ -1,57 +1,51 @@
 
 import static java.lang.System.out;
 
+// reminder: use `java -ea or -enableassertions` for testing
 public class test {
     public static void main(String [] args) {
         String hello = "hello";
 
-        // standard java
-        duplicateEX("hello");
-        duplicateEX(hello);
-        out.println(duplicateEX("hello"));
-        out.println(duplicateEX(hello));
-        System.out.println(duplicateEX("hello"));
-        System.out.println(duplicateEX(hello));
+        // standard java: literals
+        assert "hello".toUpperCase().equals("HELLO");
+        assert duplicate("hello").equals("hellohello");
+        assert duplicate("hello", true).equals("hello hello");
+        assert duplicate("hello").toUpperCase().equals("HELLOHELLO");
+        assert duplicate("hello".toUpperCase()).equals("HELLOHELLO");
+        assert duplicate(duplicate("hello")).equals("hellohellohellohello");
 
-        // standard java with params
-        duplicateEX("hello", 3);
-        duplicateEX(hello, 3);
-        out.println(duplicateEX("hello", 3));
-        out.println(duplicateEX(hello, 3));
-        System.out.println(duplicateEX("hello", 3));
-        System.out.println(duplicateEX(hello, 3));
+        // standard java: variables
+        assert hello.toUpperCase().equals("HELLO");
+        assert duplicate(hello).equals("hellohello");
+        assert duplicate(hello, true).equals("hello hello");
+        assert duplicate(hello).toUpperCase().equals("HELLOHELLO");
+        assert duplicate(hello.toUpperCase()).equals("HELLOHELLO");
+        assert duplicate(duplicate(hello)).equals("hellohellohellohello");
 
-        // fluent java
-        "hello".duplicateEX();
-        hello.duplicateEX();
-        out.println("hello".duplicateEX());
-        out.println(hello.duplicateEX());
-        System.out.println("hello".duplicateEX());
-        System.out.println(hello.duplicateEX());
+        // fluent java: literals
+        assert "hello".duplicate().equals("hellohello");
+        assert "hello".duplicate(true).equals("hello hello");
+        assert "hello".duplicate().toUpperCase().equals("HELLOHELLO");
+        assert "hello".toUpperCase().duplicate().equals("HELLOHELLO");
+        assert "hello".duplicate().duplicate().equals("hellohellohellohello");
 
-        // fluent java with params
-        "hello".duplicateEX(3);
-        hello.duplicateEX(3);
-        out.println("hello".duplicateEX(3));
-        out.println(hello.duplicateEX(3));
-        System.out.println("hello".duplicateEX(3));
-        System.out.println(hello.duplicateEX(3));
+        // fluent java: variables
+        assert hello.duplicate().equals("hellohello");
+        assert hello.duplicate(true).equals("hello hello");
+        assert hello.duplicate().toUpperCase().equals("HELLOHELLO");
+        assert hello.toUpperCase().duplicate().equals("HELLOHELLO");
+        assert hello.duplicate().duplicate().equals("hellohellohellohello");
 
-        // standard java with chaining
-        // fluent java with chaining
-        //out.println(hello.duplicateEX().duplicateEX());
-        //out.println(hello.duplicateEX ().duplicateEX(). duplicateEX();
-
-        // invalid usages (should not compile)
-        //out.println(hello.duplicateEX(3, 4));
+        // expected compilation errors
+        // "hello".blah();
+        // blah("hello");
+        // hello.duplicate(3);
+        // hello.duplicate(true, 4);
     }
 
-    public static String duplicateEX(String x) {
-        return x + " " + x;
-    }
-
-    public static String duplicateEX(String x, int times) {
-        return (x + " ").repeat(times);
+    public static String duplicate(String x) { return duplicate(x, false); }
+    public static String duplicate(String x, boolean spaces) {
+        return spaces ? (x + " " + x) : (x + x);
     }
 }
 
