@@ -90,8 +90,8 @@ public class Fluent implements Plugin {
                           List<Type> typeargtypes, boolean allowBoxing, boolean useVarargs) {
             Symbol symbol = super.findMethod(env, site, name, argtypes, typeargtypes, 
                     allowBoxing, useVarargs);
-            if (symbol.kind == Kinds.Kind.ABSENT_MTH && 
-                    ((JCMethodInvocation) env.tree).getMethodSelect() instanceof JCFieldAccess) {
+            if (symbol.kind == Kinds.Kind.ABSENT_MTH && env.tree instanceof JCMethodInvocation 
+                    && ((JCMethodInvocation) env.tree).getMethodSelect() instanceof JCFieldAccess) {
                 throw new MalformedParametersException();
             }
             return symbol;
