@@ -9,11 +9,10 @@ echo "BUILDING"
 mkdir -p target/META-INF/services
 echo "com.sun.tools.javac.comp.Fluent" > target/META-INF/services/com.sun.source.util.Plugin
 javac -source $TARGET -target $TARGET -d target Fluent.java
-cd target; jar --create --file fluent.jar *
-cd ..
+cd target; jar --create --file ../fluent.jar *; cd ..
 
 # test
 echo "TESTING"
-javac -cp target/fluent.jar -Xplugin:fluent test.java
-java test
+javac -cp fluent.jar -Xplugin:fluent -d target test.java
+java -cp target test
 
