@@ -1,46 +1,39 @@
 
-import static java.lang.System.out;
+import java.util.Arrays;
+import static java.util.Collections.sort;
 
 // reminder: use `java -ea or -enableassertions` for testing
 public class test {
     public static void main(String [] args) {
+        
+        // literals
+        assert "hello".duplicate().equals(duplicate("hello"));
+        assert "hello".duplicate(true).equals(duplicate("hello", true));
+        assert "hello".duplicate().toUpperCase().equals(duplicate("hello").toUpperCase());
+        assert "hello".toUpperCase().duplicate().equals(duplicate("hello".toUpperCase()));
+        assert "hello".duplicate().duplicate().equals(duplicate(duplicate("hello")));
+
+        // variables
         String hello = "hello";
+        assert hello.duplicate().equals(duplicate(hello));
+        assert hello.duplicate(true).equals(duplicate(hello, true));
+        assert hello.duplicate().toUpperCase().equals(duplicate(hello).toUpperCase());
+        assert hello.toUpperCase().duplicate().equals(duplicate(hello.toUpperCase()));
+        assert hello.duplicate().duplicate().equals(duplicate(duplicate(hello)));
 
-        // standard java: literals
-        assert "hello".toUpperCase().equals("HELLO");
-        assert duplicate("hello").equals("hellohello");
-        assert duplicate("hello", true).equals("hello hello");
-        assert duplicate("hello").toUpperCase().equals("HELLOHELLO");
-        assert duplicate("hello".toUpperCase()).equals("HELLOHELLO");
-        assert duplicate(duplicate("hello")).equals("hellohellohellohello");
+        // static imports
+        sort(Arrays.asList(3, 2, 1));
+        Arrays.asList(3, 2, 1).sort();
 
-        // standard java: variables
-        assert hello.toUpperCase().equals("HELLO");
-        assert duplicate(hello).equals("hellohello");
-        assert duplicate(hello, true).equals("hello hello");
-        assert duplicate(hello).toUpperCase().equals("HELLOHELLO");
-        assert duplicate(hello.toUpperCase()).equals("HELLOHELLO");
-        assert duplicate(duplicate(hello)).equals("hellohellohellohello");
-
-        // fluent java: literals
-        assert "hello".duplicate().equals("hellohello");
-        assert "hello".duplicate(true).equals("hello hello");
-        assert "hello".duplicate().toUpperCase().equals("HELLOHELLO");
-        assert "hello".toUpperCase().duplicate().equals("HELLOHELLO");
-        assert "hello".duplicate().duplicate().equals("hellohellohellohello");
-
-        // fluent java: variables
-        assert hello.duplicate().equals("hellohello");
-        assert hello.duplicate(true).equals("hello hello");
-        assert hello.duplicate().toUpperCase().equals("HELLOHELLO");
-        assert hello.toUpperCase().duplicate().equals("HELLOHELLO");
-        assert hello.duplicate().duplicate().equals("hellohellohellohello");
-
-        // expected compilation errors
-        // "hello".blah();
-        // blah("hello");
-        // hello.duplicate(3);
-        // hello.duplicate(true, 4);
+        /*
+        // error handling
+        blah("hello");
+        "hello".blah();
+        duplicate("hello", 3);
+        "hello".duplicate(3);
+        duplicate("hello", true, 4);
+        "hello".duplicate(true, 4);
+        */
     }
 
     public static String duplicate(String x) { return duplicate(x, false); }

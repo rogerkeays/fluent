@@ -21,9 +21,16 @@ cd target; $JAVA_HOME/bin/jar --create --file ../fluent.jar *; cd ..
 
 # test against all jdks
 echo "===== TESTING ====="
+echo "----- press enter to being testing valid code"; read x
 for JDK in $JDKS; do
     echo $JDK
     "$JDK"/bin/javac -cp fluent.jar -Xplugin:fluent -d target test.java
     "$JDK"/bin/java -cp target -enableassertions test
+done
+echo "\n----- press enter to begin testing code with errors"; read x
+for JDK in $JDKS; do
+    echo $JDK
+    "$JDK"/bin/javac -cp fluent.jar -Xplugin:fluent -d target testErrors.java
+    echo "----- press enter to continue"; read x
 done
 
