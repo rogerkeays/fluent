@@ -6,7 +6,7 @@ VERSION=0.1.0
 [ ! "$JAVA_HOME" ] && JAVA_HOME="$(dirname $(dirname $(readlink -f $(which javac))))"
 
 # directories containing jdks to test against, separated by spaces
-#JDKS="$HOME/tools/jdk-*"
+JDKS="$HOME/tools/jdk-*"
 [ ! "$JDKS" ] && JDKS="$JAVA_HOME"
 
 # target java 8 so we can import com.sun.tools.javac.*
