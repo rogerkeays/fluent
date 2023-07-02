@@ -9,6 +9,7 @@ public class TestErrors {
         "hello".duplicate(true, 4); // incorrect parameter count
     }
 
+    public static Boolean invert(Boolean b) { return !b; }
     public static String duplicate(String x) { return duplicate(x, false); }
     public static String duplicate(String x, boolean spaces) {
         return spaces ? (x + " " + x) : (x + x);

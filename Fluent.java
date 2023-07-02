@@ -4,6 +4,7 @@ import com.sun.source.util.*;
 import com.sun.source.tree.*;
 import com.sun.tools.javac.api.*;
 import com.sun.tools.javac.code.*;
+import com.sun.tools.javac.code.Kinds.KindSelector;
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.tree.JCTree.*;
 import com.sun.tools.javac.tree.TreeMaker;
@@ -120,6 +121,27 @@ public class Fluent implements Plugin {
                 tree.meth = TreeMaker.instance(context).at(tree.pos).Ident(lhs.getIdentifier());
                 super.visitApply(tree);
             }
+        }
+
+        // look for fluent methods on primitive types
+        @Override
+        public void visitSelect(JCFieldAccess tree) {
+            KindSelector skind = KindSelector.NIL;
+            if (tree.name == names._this || tree.name == names._super ||
+                    tree.name == names._class) {
+                skind = KindSelector.TYP;
+            } else {
+                if (pkind().contains(KindSelector.PCK))
+                    skind = KindSelector.of(skind, KindSelector.PCK);
+                if (pkind().contains(KindSelector.TYP))
+                    skind = KindSelector.of(skind, KindSelector.TYP, KindSelector.PCK);
+                if (pkind().contains(KindSelector.VAL_MTH))
+                    skind = KindSelector.of(skind, KindSelector.VAL, KindSelector.TYP);
+            }
+
+            Type site = attribTree(tree.selected, env, new ResultInfo(skind, Type.noType));
+            if (site.isPrimitive()) throw new AbsentMethodException();
+            super.visitSelect(tree);
         }
     }
 
