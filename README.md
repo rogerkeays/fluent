@@ -1,8 +1,6 @@
-# fluent
+# fluent: Static Extension Methods for Java
 
-Static Extension Methods for Java.
-
-**fluent** allows you to call static Java methods as if they were object methods. For example, instead of writing:
+*fluent* allows you to call static Java methods as if they were object methods. For example, instead of writing:
 
     assertNotEmpty(getHttpContent(createSharedUrl(website, "styles.css")));
 
@@ -12,17 +10,17 @@ you would write:
 
 where the method signatures are:
 
-    public static URL createSharedUrl(Account account, String path) {}
+    public static URL createSharedUrl(Website website, String path) {}
     public static String getHttpContent(URL url) {}
     public static void assertNotEmpty(String string) {}
 
-**fluent** works by passing the object instance as the first parameter to the static extension method. *This only occurs if normal method resolution fails*. No annotations are required. You can use any static method as an extension, although if you are importing them from another class, you will need to use `import static` so they can be resolved.
+*fluent* works by passing the object instance as the first parameter to the static extension method. **This only occurs if normal method resolution fails**. No annotations are required. You can use any static method as an extension, although if you are importing them from another class, you will need to use `import static` so they can be resolved.
 
 Extension methods are useful for the case where you can't (or don't want to) add methods to a class or subclass. Commonly, such methods are called "utility methods", but they can be better thought of as "functions".
 
-**fluent** is implemented as a `javac` compiler plugin and has no runtime dependencies. It works by transforming the abstract syntax tree during compilation, so the resulting class file is identical to writing native static method calls.
+*fluent* is implemented as a `javac` compiler plugin and has no runtime dependencies. It works by transforming the abstract syntax tree during compilation, so the resulting class file is identical to writing native static method calls.
 
-**fluent** requires jdk 9 or above.
+*fluent* requires jdk 9 or above.
 
 ## Quick Start
 
@@ -33,7 +31,7 @@ Download the jar, place it on your classpath, and run `javac` using `-Xplugin:fl
 
 ## Install Using Maven
 
-**fluent** is not yet available on Maven Central, however you can install it locally like this:
+*fluent* is not yet available on Maven Central, however you can install it locally like this:
 
     wget https://github.com/rogerkeays/fluent/raw/main/fluent.jar
     mvn install:install-file -DgroupId=jamaica -DartifactId=fluent -Dversion=0.1.0 -Dpackaging=jar -Dfile=fluent.jar
@@ -73,22 +71,22 @@ You may also have to experiment with `<fork/>` and `<forceJavacCompilation/>` to
 
 ## Build It Yourself
 
-**fluent** is built using a `bash` script:
+*fluent* is built using a `bash` script:
 
     git clone https://github.com/rogerkeays/fluent.git
     cd fluent
     ./build.sh
 
-If your operating system doesn't include `bash` it shouldn't be too hard to convert to whatever shell you are using. I mean, we're talking about one java file and a generated text file here.
+If your operating system doesn't include `bash` it shouldn't be too hard to convert to whatever shell you are using. I mean, we're talking about one java file and a text file here.
 
 ## IDE Support
 
-There is currently no IDE support for **fluent**. Part of the purpose of this plugin is to make Java easier, so you don't need an IDE. However, contributions are welcome. It may be possible to get your IDE to load the **fluent** plugin into it's compiler. If you get it working, please [post something to github](https://github.com/rogerkeays/fluent/issues) so we can all benefit.
+There is currently no IDE support for *fluent*. Part of the purpose of this plugin is to make Java easier, so you don't need an IDE. However, contributions are welcome. It may be possible to get your IDE to load the *fluent* plugin into it's compiler. If you get it working, please [post something to github](https://github.com/rogerkeays/fluent/issues) so we can all benefit.
 
 ## Known Issues
 
-   * **fluent** may not be compatible with other `javac` plugins, though so far it seems to play nice with Lombok, at least.
-   * **fluent** will make you a more productive programmer, which may go against corporate policy.
+   * *fluent* may not be compatible with other `javac` plugins, though so far it seems to play nice with Lombok, at least.
+   * *fluent* will make you a more productive programmer, which may go against corporate policy.
 
 ## Related Resources
 
