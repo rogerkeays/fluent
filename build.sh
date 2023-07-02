@@ -7,8 +7,8 @@ TARGET=9
 [ ! "$JAVA_HOME" ] && JAVA_HOME="$(dirname $(dirname $(readlink -f $(which javac))))"
 
 # directories containing jdks to test against, separated by spaces
-JDKS="$HOME/tools/jdk-*"
-[ ! "$JDKS" ] && JDKS="$JAVA_HOME"
+JDKS="$JAVA_HOME"
+#JDKS="$HOME/tools/jdk-*"
 
 # compile and build jar
 # note: -source 8 is required to import com.sun.tools.javac.*
