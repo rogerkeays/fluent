@@ -67,7 +67,7 @@ Note, newer versions of the compiler plugin use a different syntax:
        <arg>-Xplugin:fluent</arg>
      </compilerArgs>
 
-You may also have to experiment with `<fork/>` and `<forceJavacCompilation/>` to get Maven to co-operate. Your mileage may vary.
+You may also have to experiment with `<fork/>` and `<forceJavacCompilerUse/>` to get Maven to co-operate. Refer to the [Maven Compiler Plugin docs](https://maven.apache.org/plugins/maven-compiler-plugin/compile-mojo.html) for more details.
 
 ## Build It Yourself
 
