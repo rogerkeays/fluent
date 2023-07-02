@@ -85,7 +85,7 @@ If your operating system doesn't include `sh` it shouldn't be too hard to conver
 
 ## IDE Support
 
-There is currently no IDE support for *fluent*. Part of the purpose of this plugin is to make Java easier, so you don't need an IDE. However, contributions are welcome. It may be possible to get your IDE to load the *fluent* plugin into it's compiler. If you get it working, please [post something to github](https://github.com/rogerkeays/fluent/issues) so we can all benefit.
+There is currently no IDE support for *fluent*. Contributions are welcome. It may be possible to get your IDE to load the *fluent* plugin into it's compiler. If you get it working, please [post something to github](https://github.com/rogerkeays/fluent/issues) so we can all benefit.
 
 ## Known Issues
 
