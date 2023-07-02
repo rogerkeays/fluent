@@ -8,7 +8,7 @@ you would write:
 
     website.createSharedUrl("styles.css").getHttpContent().assertNotEmpty();
 
-If a method can't be resolved using Java's normal rules, *fluent* will rewrite it as such:
+*fluent* works by transforming the abstract syntax tree during compilation. If a method can't be resolved using Java's normal rules, *fluent* will rewrite it as such:
 
     object.method(params...) -> method(object, params...)
 
@@ -22,7 +22,7 @@ In the above example, the extension method signatures would be:
 
 Extension methods are useful for cases where you can't (or don't want to) add methods to a class or subclass. Commonly, such methods are called "utility methods", but in most other programming languages, you would just call them "functions".
 
-*fluent* is implemented as a `javac` compiler plugin and has no runtime dependencies. *fluent* works by transforming the abstract syntax tree during compilation, so the resulting class file is identical to writing native static method calls. It requires JDK 9 or above.
+*fluent* is implemented as a `javac` compiler plugin and has no runtime dependencies. The resulting class files are identical to code compiled with vanilla static method calls. *fluent* requires JDK 9 or above.
 
 ## Quick Start
 
