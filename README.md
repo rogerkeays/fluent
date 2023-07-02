@@ -56,7 +56,7 @@ And configure the compiler plugin:
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>2.3.2</version>
+          <version>3.11.0</version>
           <configuration>
             <compilerArguments>
               <Xplugin:fluent/>
@@ -65,13 +65,7 @@ And configure the compiler plugin:
           </configuration>
         </plugin>
 
-Note, newer versions of the compiler plugin use a different syntax:
-
-     <compilerArgs>
-       <arg>-Xplugin:fluent</arg>
-     </compilerArgs>
-
-You may also have to experiment with `<fork/>` and `<forceJavacCompilerUse/>` to get Maven to co-operate. Refer to the [Maven Compiler Plugin docs](https://maven.apache.org/plugins/maven-compiler-plugin/compile-mojo.html) for more details.
+Note, older versions of the compiler plugin use a different syntax. Refer to the [Maven Compiler Plugin docs](https://maven.apache.org/plugins/maven-compiler-plugin/compile-mojo.html) for more details.
 
 ## Build It Yourself
 
