@@ -71,13 +71,13 @@ You may also have to experiment with `<fork/>` and `<forceJavacCompilerUse/>` to
 
 ## Build It Yourself
 
-*fluent* is built using a `bash` script:
+*fluent* is built using a POSIX shell script:
 
     git clone https://github.com/rogerkeays/fluent.git
     cd fluent
     ./build.sh
 
-If your operating system doesn't include `bash` it shouldn't be too hard to convert to whatever shell you are using. I mean, we're talking about one java file and a text file here.
+If your operating system doesn't include `sh` it shouldn't be too hard to convert to whatever shell you are using. I mean, we're talking about one java file and a text file here.
 
 ## IDE Support
 
