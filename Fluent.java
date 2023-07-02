@@ -35,8 +35,9 @@ public class Fluent implements Plugin {
 
             // patch extended classes into the compiler context
             Context context = ((BasicJavacTask) task).getContext();
-            Object resolve = bootstrap(FluentResolve.class, context);
-            Object attr = bootstrap(FluentAttr.class, context);
+            reload(AbsentMethodException.class, context);
+            Object resolve = instance(reload(FluentResolve.class, context), context);
+            Object attr = instance(reload(FluentAttr.class, context), context);
             inject(JavaCompiler.class, "attr", attr, context);
             inject(ArgumentAttr.class, "attr", attr, context);
             inject(DeferredAttr.class, "attr", attr, context);
@@ -45,11 +46,10 @@ public class Fluent implements Plugin {
         }
     }
 
-    // reload an extended class using the jdk.compiler classloader
+    // reload a class using the jdk.compiler classloader
     // this is necessary to be considered part of the same package
     // otherwise we cannot override package/protected methods
-    // returns the singleton instance of the reloaded class
-    Object bootstrap(Class klass, Context context) throws Exception {
+    Class reload(Class klass, Context context) throws Exception {
         InputStream is = klass.getClassLoader().getResourceAsStream(
                 klass.getName().replace('.', '/') + ".class");
         byte[] bytes = new byte[is.available()];
@@ -57,9 +57,8 @@ public class Fluent implements Plugin {
         Method m = ClassLoader.class.getDeclaredMethod("defineClass", new Class[] {
                 String.class, byte[].class, int.class, int.class });
         m.setAccessible(true);
-        Class newKlass = (Class) m.invoke(JavaCompiler.class.getClassLoader(), 
+        return (Class) m.invoke(JavaCompiler.class.getClassLoader(), 
                 klass.getName(), bytes, 0, bytes.length);
-        return instance(newKlass, context);
     }
     
     // get the singleton of a class for a given context
@@ -83,16 +82,16 @@ public class Fluent implements Plugin {
             return new FluentResolve(context);
         }
 
-        // if we fail to find a class method, but find a static extension method,
-        // throw an exception to instruct the attributor to transform the AST
+        // throw an exception when an object method is not found
+        // this will cause the attributor to transform the syntax tree and try again
         @Override
         Symbol findMethod(Env<AttrContext> env, Type site, Name name, List<Type> argtypes,
-                          List<Type> typeargtypes, boolean allowBoxing, boolean useVarargs) {
-            Symbol symbol = super.findMethod(env, site, name, argtypes, typeargtypes, 
-                    allowBoxing, useVarargs);
-            if (symbol.kind == Kinds.Kind.ABSENT_MTH && env.tree instanceof JCMethodInvocation 
+                          List<Type> typeargtypes, boolean boxing, boolean varargs) {
+            Symbol symbol = super.findMethod(env, site, name, argtypes, typeargtypes, boxing, varargs);
+            if (symbol.kind == Kinds.Kind.ABSENT_MTH
+                    && env.tree instanceof JCMethodInvocation 
                     && ((JCMethodInvocation) env.tree).getMethodSelect() instanceof JCFieldAccess) {
-                throw new MalformedParametersException();
+                throw new AbsentMethodException();
             }
             return symbol;
         }
@@ -110,12 +109,12 @@ public class Fluent implements Plugin {
             return new FluentAttr(context);
         }
         
-        // transform the abstract syntax tree when instructed to by the resolver
+        // transform the abstract syntax tree when an object method is not found
         @Override
         public void visitApply(JCMethodInvocation tree) {
             try {
                 super.visitApply(tree);
-            } catch (MalformedParametersException e) {
+            } catch (AbsentMethodException e) {
                 JCFieldAccess lhs = (JCFieldAccess) tree.getMethodSelect();
                 tree.args = tree.args.prepend(lhs.getExpression());
                 tree.meth = TreeMaker.instance(context).at(tree.pos).Ident(lhs.getIdentifier());
@@ -123,6 +122,8 @@ public class Fluent implements Plugin {
             }
         }
     }
+
+    public static class AbsentMethodException extends RuntimeException {}
 
     @Override public String getName() { return "fluent"; }
 }
