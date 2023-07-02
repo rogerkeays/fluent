@@ -8,7 +8,7 @@ you would write:
 
     website.createSharedUrl("styles.css").getHttpContent().assertNotEmpty();
 
-*fluent* works by transforming the abstract syntax tree during compilation, so the resulting class file is identical to writing native static method calls. If a method can't be resolved, *fluent* will rewrite it as such:
+*fluent* works by transforming the abstract syntax tree during compilation, so the resulting class file is identical to writing native static method calls. If a method can't be resolved using Java's normal rules, *fluent* will rewrite it as such:
 
     object.method(params...) -> method(object, params...)
 
