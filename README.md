@@ -14,13 +14,13 @@ where the method signatures are:
     public static String getHttpContent(URL url) {}
     public static void assertNotEmpty(String string) {}
 
-*fluent* is implemented as a `javac` compiler plugin and has no runtime dependencies. It works by transforming the abstract syntax tree during compilation, so the resulting class file is identical to writing native static method calls. If a method can't be resolved, fluent will rewrite it as such:
+*fluent* is implemented as a `javac` compiler plugin and has no runtime dependencies. It works by transforming the abstract syntax tree during compilation, so the resulting class file is identical to writing native static method calls. If a method can't be resolved, *fluent* will rewrite it as such:
 
     object.method(params...) -> method(object, params...)
 
 and then give it back to the compiler. Any static functions that are in scope can be used. i.e, those you've written or imported. If you are importing them from another class, you will need to use `import static` so they can be resolved. No annotations are required.
 
-Extension methods are useful for cases where you can't (or don't want to) add methods to a class or subclass. Commonly, such methods are called "utility methods", but they can be better thought of as "functions".
+Extension methods are useful for cases where you can't (or don't want to) add methods to a class or subclass. Commonly, such methods are called "utility methods", but in most other programming languages, you would just call them "functions".
 
 *fluent* requires JDK 9 or above.
 
