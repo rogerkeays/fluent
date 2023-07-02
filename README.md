@@ -12,7 +12,7 @@ you would write:
 
     object.method(params...) -> method(object, params...)
 
-and then give it back to the compiler. Any static functions that are in scope can be used. i.e, those you've written or imported. If you are importing them from another class, you will need to use `import static` so they can be resolved. No annotations are required.
+and then give it back to the compiler. Now, the compiler will look for a static method taking the object as it's first parameter. Any static methods that are in scope can be used. i.e, those you've written or imported. If you are importing them from another class, you will need to use `import static` so they can be resolved. No annotations are required.
 
 In the above example, the method signatures would be:
 
