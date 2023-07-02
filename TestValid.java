@@ -2,8 +2,8 @@
 import java.util.Arrays;
 import static java.util.Collections.sort;
 
-// reminder: use `java -ea or -enableassertions` for testing
-public class test {
+// reminder: use `java -ea or -enableassertions` to execute
+public class TestValid {
     public static void main(String [] args) {
         
         // literals
@@ -24,16 +24,6 @@ public class test {
         // static imports
         sort(Arrays.asList(3, 2, 1));
         Arrays.asList(3, 2, 1).sort();
-
-        /*
-        // error handling
-        blah("hello");
-        "hello".blah();
-        duplicate("hello", 3);
-        "hello".duplicate(3);
-        duplicate("hello", true, 4);
-        "hello".duplicate(true, 4);
-        */
     }
 
     public static String duplicate(String x) { return duplicate(x, false); }

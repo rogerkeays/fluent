@@ -1,5 +1,5 @@
 
-public class testErrors {
+public class TestErrors {
     public static void main(String [] args) {
         blah("hello"); // no such method
         "hello".blah(); // no such method

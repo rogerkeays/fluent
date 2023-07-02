@@ -26,13 +26,13 @@ echo "\n===== TESTING ====="
 echo "----- press enter to being testing valid code"; read x
 for JDK in $JDKS; do
     echo $JDK
-    "$JDK"/bin/javac -cp fluent.jar -Xplugin:fluent -d target test.java
-    "$JDK"/bin/java -cp target -enableassertions test
+    "$JDK"/bin/javac -cp fluent.jar -Xplugin:fluent -d target TestValid.java
+    "$JDK"/bin/java -cp target -enableassertions TestValid
 done
 echo "\n----- press enter to begin testing code with errors"; read x
 for JDK in $JDKS; do
     echo $JDK
-    "$JDK"/bin/javac -cp fluent.jar -Xplugin:fluent -d target testErrors.java
+    "$JDK"/bin/javac -cp fluent.jar -Xplugin:fluent -d target TestErrors.java
     echo "\n----- press enter to continue"; read x
 done
 
