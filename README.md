@@ -20,7 +20,7 @@ Extension methods are useful for the case where you can't (or don't want to) add
 
 *fluent* is implemented as a `javac` compiler plugin and has no runtime dependencies. It works by transforming the abstract syntax tree during compilation, so the resulting class file is identical to writing native static method calls.
 
-*fluent* requires jdk 9 or above.
+*fluent* requires JDK 9 or above.
 
 ## Quick Start
 
@@ -90,7 +90,7 @@ There is currently no IDE support for *fluent*. Part of the purpose of this plug
 
 ## Related Resources
 
-   * [kotlin](https://kotlinlang.org): a jvm language which supports extension methods out of the box.
+   * [kotlin](https://kotlinlang.org): a JVM language which supports extension methods out of the box.
    * [Project Lombok](https://github.com/projectlombok/lombok): the grand-daddy of `javac` hacks.
    * [unchecked](https://github.com/rogerkeays/unchecked): evade the checked exceptions mafia in Java.
    * [Java Operator Overloading](https://github.com/amelentev/java-oo): a `javac` plugin using similar ideas.
