@@ -1,6 +1,7 @@
 #!/bin/sh
 
 VERSION=0.1.0
+TARGET=9
 
 # location of jdk for building fluent
 [ ! "$JAVA_HOME" ] && JAVA_HOME="$(dirname $(dirname $(readlink -f $(which javac))))"
@@ -9,16 +10,14 @@ VERSION=0.1.0
 JDKS="$HOME/tools/jdk-*"
 [ ! "$JDKS" ] && JDKS="$JAVA_HOME"
 
-# target java 8 so we can import com.sun.tools.javac.*
-TARGET=8
-
 # compile and build jar
+# note: -source 8 is required to import com.sun.tools.javac.*
 echo "===== BUILDING ====="
 echo $JAVA_HOME
 [ -d target ] && rm -r target
 mkdir -p target/META-INF/services
 echo "com.sun.tools.javac.comp.Fluent" > target/META-INF/services/com.sun.source.util.Plugin
-$JAVA_HOME/bin/javac -source $TARGET -target $TARGET -d target Fluent.java
+$JAVA_HOME/bin/javac -source 8 -target $TARGET -d target Fluent.java
 cd target; $JAVA_HOME/bin/jar --create --file ../fluent.jar *; cd ..
 
 # test against all jdks
