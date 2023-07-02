@@ -85,7 +85,7 @@ There is currently no IDE support for *fluent*. Part of the purpose of this plug
 
 ## Known Issues
 
-   * you must use parentheses around primitive numbers to avoid parsing ambiguity: e.g., `(0).inc()`
+   * you must use parentheses around primitive numbers when calling an extension method: e.g. `(0).inc()` 
    * *fluent* may not be compatible with other `javac` plugins, though so far it seems to play nice with Lombok, at least.
    * *fluent* will make you a more productive programmer, which may go against corporate policy.
 
