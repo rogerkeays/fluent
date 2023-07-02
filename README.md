@@ -8,13 +8,13 @@ you would write:
 
     website.createSharedUrl("styles.css").getHttpContent().assertNotEmpty();
 
-*fluent* works by transforming the abstract syntax tree during compilation, so the resulting class file is identical to writing native static method calls. If a method can't be resolved using Java's normal rules, *fluent* will rewrite it as such:
+If a method can't be resolved using Java's normal rules, *fluent* will rewrite it as such:
 
     object.method(params...) -> method(object, params...)
 
 and then give it back to the compiler. Now, the compiler will look for a static method taking the object as it's first parameter. Any static methods that are in scope can be used. i.e, those you've written or imported. If you are importing them from another class, you will need to use `import static` so they can be resolved. No annotations are required.
 
-In the above example, the method signatures would be:
+In the above example, the extension method signatures would be:
 
     public static URL createSharedUrl(Website website, String path) {}
     public static String getHttpContent(URL url) {}
@@ -22,7 +22,7 @@ In the above example, the method signatures would be:
 
 Extension methods are useful for cases where you can't (or don't want to) add methods to a class or subclass. Commonly, such methods are called "utility methods", but in most other programming languages, you would just call them "functions".
 
-*fluent* is implemented as a `javac` compiler plugin and has no runtime dependencies. It requires JDK 9 or above.
+*fluent* is implemented as a `javac` compiler plugin and has no runtime dependencies. *fluent* works by transforming the abstract syntax tree during compilation, so the resulting class file is identical to writing native static method calls. It requires JDK 9 or above.
 
 ## Quick Start
 
