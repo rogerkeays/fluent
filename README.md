@@ -22,7 +22,9 @@ In the above example, the extension method signatures would be:
 
 Extension methods are useful for cases where you can't (or don't want to) add methods to a class or subclass. Commonly, such methods are called "utility methods", but in most other programming languages, you would just call them "functions".
 
-*fluent* is implemented as a `javac` compiler plugin and has no runtime dependencies. The resulting class files are identical to code compiled with regular static method calls. *fluent* requires JDK 9 or above.
+*fluent* is implemented as a `javac` compiler plugin and has no runtime dependencies. The resulting class files are identical to code compiled with regular static method calls.
+
+*fluent* supports JDK 9 and above.
 
 ## Quick Start
 
