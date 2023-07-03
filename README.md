@@ -6,7 +6,7 @@
 
 you would write:
 
-    website.createUrl("styles.css").getHttpContent(1000).assertContains("img.jpg");
+    website.createUrl("styles.css").getHttpContent(60).assertContains("img.jpg");
 
 *Fluent* works by transforming the abstract syntax tree during compilation. If a method can't be resolved using Java's normal rules, *Fluent* will rewrite it as such:
 
