@@ -1,6 +1,6 @@
-# fluent: Static Extension Methods for Java
+# Fluent: Static Extension Methods for Java
 
-*fluent* allows you to call static Java methods as if they were object methods. For example, instead of writing:
+*Fluent* allows you to call static Java methods as if they were object methods. For example, instead of writing:
 
     assertNotEmpty(getHttpContent(createSharedUrl(website, "styles.css")));
 
@@ -8,7 +8,7 @@ you would write:
 
     website.createSharedUrl("styles.css").getHttpContent().assertNotEmpty();
 
-*fluent* works by transforming the abstract syntax tree during compilation. If a method can't be resolved using Java's normal rules, *fluent* will rewrite it as such:
+*Fluent* works by transforming the abstract syntax tree during compilation. If a method can't be resolved using Java's normal rules, *Fluent* will rewrite it as such:
 
     object.method(params...) -> method(object, params...)
 
@@ -22,9 +22,9 @@ In the above example, the extension method signatures would be:
 
 Extension methods are useful for cases where you can't (or don't want to) add methods to a class or subclass. Commonly, such methods are called "utility methods", but in most other programming languages, you would just call them "functions".
 
-*fluent* is implemented as a `javac` compiler plugin and has no runtime dependencies. The resulting class files are identical to code compiled with regular static method calls.
+*Fluent* is implemented as a `javac` compiler plugin and has no runtime dependencies. The resulting class files are identical to code compiled with regular static method calls.
 
-*fluent* supports JDK 9 and above.
+*Fluent* supports JDK 9 and above.
 
 ## Quick Start
 
@@ -35,7 +35,7 @@ Download the jar, place it on your classpath, and run `javac` using `-Xplugin:fl
 
 ## Install Using Maven
 
-*fluent* is not yet available on Maven Central, however you can install it locally like this:
+*Fluent* is not yet available on Maven Central, however you can install it locally like this:
 
     wget https://github.com/rogerkeays/fluent/raw/main/fluent.jar
     mvn install:install-file -DgroupId=jamaica -DartifactId=fluent -Dversion=0.1.0 -Dpackaging=jar -Dfile=fluent.jar
@@ -69,7 +69,7 @@ Note, older versions of the compiler plugin use a different syntax. Refer to the
 
 ## Build It Yourself
 
-*fluent* is built using a POSIX shell script:
+*Fluent* is built using a POSIX shell script:
 
     git clone https://github.com/rogerkeays/fluent.git
     cd fluent
@@ -79,13 +79,13 @@ If your operating system doesn't include `sh` it shouldn't be too hard to conver
 
 ## IDE Support
 
-There is currently no IDE support for *fluent*. Contributions are welcome. It may be possible to get your IDE to load the *fluent* plugin into it's compiler. If you get it working, please [post something to github](https://github.com/rogerkeays/fluent/issues) so we can all benefit.
+There is currently no IDE support for *Fluent*. Contributions are welcome. It may be possible to get your IDE to load the *Fluent* plugin into it's compiler. If you get it working, please [post something to github](https://github.com/rogerkeays/fluent/issues) so we can all benefit.
 
 ## Known Issues
 
    * you must use parentheses around primitive numbers when calling an extension method: e.g. `(0).inc()` 
-   * *fluent* may not be compatible with other `javac` plugins, though so far it seems to play nice with Lombok, at least.
-   * *fluent* will make you a more productive programmer, which may go against corporate policy.
+   * *Fluent* may not be compatible with other `javac` plugins, though so far it seems to play nice with Lombok, at least.
+   * *Fluent* will make you a more productive programmer, which may go against corporate policy.
 
 ## Related Resources
 
