@@ -113,5 +113,5 @@ There is currently no IDE support for *Fluent*. Contributions are welcome. It ma
   * [unchecked](https://github.com/rogerkeays/unchecked): evade the checked exceptions mafia in Java.
   * [Java Operator Overloading](https://github.com/amelentev/java-oo): a `javac` plugin using similar ideas.
   * [racket-fluent](https://github.com/rogerkeays/racket-fluent): fluent syntax for Racket.
-  * [more stuff from the author you never knew you wanted](https://rogerkeays.com)
+  * [more stuff you never knew you wanted](https://rogerkeays.com)
 
