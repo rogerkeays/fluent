@@ -113,14 +113,14 @@ Language design can be a divisive topic. Some interesting threads around extensi
   * [Fluent post on hackernews](https://news.ycombinator.com/item?id=36569411)
   * [Fluent post on reddit](https://www.reddit.com/r/java/comments/14ole9l/fluent_static_extension_methods_for_java/)
   * [Extension Methods on Wikipedia](https://en.wikipedia.org/wiki/Extension_method)
-  * [Uniform Function Call Syntax in D](https://tour.dlang.org/tour/en/gems/uniform-function-call-syntax-ufcs): same idea, neat, and buzz-word compliant.
+  * [Uniform Function Call Syntax in D](https://tour.dlang.org/tour/en/gems/uniform-function-call-syntax-ufcs)
   * [Brian Geotz on stackoverflow](https://stackoverflow.com/questions/29466427/what-was-the-design-consideration-of-not-allowing-use-site-injection-of-extensio/29494337#29494337)
 
 ## Related Resources
 
   * [kotlin](https://kotlinlang.org): a JVM language which supports extension methods out of the box.
-  * [Lombok](https://github.com/projectlombok/lombok): the grand-daddy of hacks for `javac`.
-  * [Manifold](https://manifold.systems): a `javac` plugin with many features.
+  * [Lombok](https://github.com/projectlombok/lombok): the grand-daddy of `javac` hacks, with experimental support for extension methods.
+  * [Manifold](https://manifold.systems): a `javac` plugin with many features, including extension methods.
   * [racket-fluent](https://github.com/rogerkeays/racket-fluent): fluent syntax for Racket.
   * [unchecked](https://github.com/rogerkeays/unchecked): evade the checked exceptions mafia in Java.
   * [more stuff you never knew you wanted](https://rogerkeays.com)
