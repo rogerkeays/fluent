@@ -2,11 +2,11 @@
 
 *Fluent* allows you to call static Java methods as if they were object methods. For example, instead of writing:
 
-    assertNotEmpty(getHttpContent(createUrl(website, "styles.css")));
+    assertContains(getHttpContent(createUrl(website, "styles.css"), 1000), "img.jpg");
 
 you would write:
 
-    website.createUrl("styles.css").getHttpContent().assertNotEmpty();
+    website.createUrl("styles.css").getHttpContent(1000).assertContains("img.jpg");
 
 *Fluent* works by transforming the abstract syntax tree during compilation. If a method can't be resolved using Java's normal rules, *Fluent* will rewrite it as such:
 
@@ -17,8 +17,8 @@ and then give it back to the compiler. Now, the compiler will look for a static 
 In the above example, the extension method signatures would be:
 
     public static URL createUrl(Website website, String path) {}
-    public static String getHttpContent(URL url) {}
-    public static void assertNotEmpty(String string) {}
+    public static String getHttpContent(URL url, int timeout) {}
+    public static void assertContains(String string, String string) {}
 
 Extension methods are useful when you can't (or don't want to) add methods to a class or subclass, or you are working with an interface. Commonly, such methods are called "utility methods", but in most other programming languages, you would just call them "functions".
 
