@@ -110,11 +110,11 @@ There is currently no IDE support for *Fluent*. Contributions are welcome. It ma
 
 Language design can be a divisive topic. Some interesting threads around extension methods can be found here:
 
-  * [Fluent post on hackernews](https://news.ycombinator.com/item?id=36569411)
-  * [Fluent post on reddit](https://www.reddit.com/r/java/comments/14ole9l/fluent_static_extension_methods_for_java/)
+  * [Why doesn't Java support extension methods?](https://stackoverflow.com/questions/29466427/what-was-the-design-consideration-of-not-allowing-use-site-injection-of-extensio/29494337#29494337)
   * [Extension Methods on Wikipedia](https://en.wikipedia.org/wiki/Extension_method)
   * [Uniform Function Call Syntax in D](https://tour.dlang.org/tour/en/gems/uniform-function-call-syntax-ufcs)
-  * [Brian Geotz on stackoverflow](https://stackoverflow.com/questions/29466427/what-was-the-design-consideration-of-not-allowing-use-site-injection-of-extensio/29494337#29494337)
+  * [Fluent post on hackernews](https://news.ycombinator.com/item?id=36569411)
+  * [Fluent post on reddit](https://www.reddit.com/r/java/comments/14ole9l/fluent_static_extension_methods_for_java/)
 
 ## Related Resources
 
