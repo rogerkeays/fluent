@@ -81,20 +81,20 @@ If your operating system doesn't include `sh` it shouldn't be too hard to conver
 
 **Fluent** is tested with the following JDKs:
 
-    * jdk-09.0.4
-    * jdk-10.0.2
-    * jdk-11.0.8
-    * jdk-12.0.2
-    * jdk-13.0.2
-    * jdk-14.0.2
-    * jdk-15.0.2
-    * jdk-16.0.2
-    * jdk-17.0.2
-    * jdk-18.0.2.1
-    * jdk-19.0.2
-    * jdk-20.0.1
-    * jdk-21 (early access)
-    * jdk-22 (early access)
+  * jdk-09.0.4
+  * jdk-10.0.2
+  * jdk-11.0.8
+  * jdk-12.0.2
+  * jdk-13.0.2
+  * jdk-14.0.2
+  * jdk-15.0.2
+  * jdk-16.0.2
+  * jdk-17.0.2
+  * jdk-18.0.2.1
+  * jdk-19.0.2
+  * jdk-20.0.1
+  * jdk-21 (early access)
+  * jdk-22 (early access)
 
 ## IDE Support
 
@@ -102,16 +102,16 @@ There is currently no IDE support for *Fluent*. Contributions are welcome. It ma
 
 ## Known Issues
 
-   * you must use parentheses around primitive numbers when calling an extension method: e.g. `(0).inc()` 
-   * *Fluent* may not be compatible with other `javac` plugins, though so far it seems to play nice with Lombok, at least.
-   * *Fluent* will make you a more productive programmer, which may go against corporate policy.
+  * you must use parentheses around primitive numbers when calling an extension method: e.g. `(0).inc()` 
+  * *Fluent* may not be compatible with other `javac` plugins, though so far it seems to play nice with Lombok, at least.
+  * *Fluent* will make you a more productive programmer, which may go against corporate policy.
 
 ## Related Resources
 
-   * [kotlin](https://kotlinlang.org): a JVM language which supports extension methods out of the box.
-   * [Project Lombok](https://github.com/projectlombok/lombok): the grand-daddy of `javac` hacks.
-   * [unchecked](https://github.com/rogerkeays/unchecked): evade the checked exceptions mafia in Java.
-   * [Java Operator Overloading](https://github.com/amelentev/java-oo): a `javac` plugin using similar ideas.
-   * [racket-fluent](https://github.com/rogerkeays/racket-fluent): fluent syntax for Racket.
-   * [more stuff you never knew you wanted](https://rogerkeays.com)
+  * [kotlin](https://kotlinlang.org): a JVM language which supports extension methods out of the box.
+  * [Project Lombok](https://github.com/projectlombok/lombok): the grand-daddy of `javac` hacks.
+  * [unchecked](https://github.com/rogerkeays/unchecked): evade the checked exceptions mafia in Java.
+  * [Java Operator Overloading](https://github.com/amelentev/java-oo): a `javac` plugin using similar ideas.
+  * [racket-fluent](https://github.com/rogerkeays/racket-fluent): fluent syntax for Racket.
+  * [more stuff you never knew you wanted](https://rogerkeays.com)
 
