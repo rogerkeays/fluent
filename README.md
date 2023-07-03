@@ -2,7 +2,7 @@
 
 *Fluent* allows you to call static Java methods as if they were object methods. For example, instead of writing:
 
-    assertContains(getHttpContent(createUrl(website, "styles.css"), 1000), "img.jpg");
+    assertContains(getHttpContent(createUrl(website, "styles.css"), 60), "img.jpg");
 
 you would write:
 
