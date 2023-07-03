@@ -20,7 +20,7 @@ In the above example, the extension method signatures would be:
     public static String getHttpContent(URL url) {}
     public static void assertNotEmpty(String string) {}
 
-Extension methods are useful for cases where you can't (or don't want to) add methods to a class or subclass. Commonly, such methods are called "utility methods", but in most other programming languages, you would just call them "functions".
+Extension methods are useful for cases where you can't (or don't want to) add methods to a class or subclass, or you are working with an interface. Commonly, such methods are called "utility methods", but in most other programming languages, you would just call them "functions".
 
 *Fluent* is implemented as a `javac` compiler plugin and has no runtime dependencies. The resulting class files are identical to code compiled with regular static method calls.
 
