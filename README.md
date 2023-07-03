@@ -118,10 +118,9 @@ Language design can be a divisive topic. Some interesting threads around extensi
 ## Related Resources
 
   * [kotlin](https://kotlinlang.org): a JVM language which supports extension methods out of the box.
-  * [uniform function call syntax in D](https://tour.dlang.org/tour/en/gems/uniform-function-call-syntax-ufcs)
   * [Project Lombok](https://github.com/projectlombok/lombok): the grand-daddy of `javac` hacks.
-  * [unchecked](https://github.com/rogerkeays/unchecked): evade the checked exceptions mafia in Java.
-  * [Java Operator Overloading](https://github.com/amelentev/java-oo): a `javac` plugin using similar ideas.
+  * [uniform function call syntax in D](https://tour.dlang.org/tour/en/gems/uniform-function-call-syntax-ufcs): same idea, neat, and buzz-word compliant.
   * [racket-fluent](https://github.com/rogerkeays/racket-fluent): fluent syntax for Racket.
+  * [unchecked](https://github.com/rogerkeays/unchecked): evade the checked exceptions mafia in Java.
   * [more stuff you never knew you wanted](https://rogerkeays.com)
 
