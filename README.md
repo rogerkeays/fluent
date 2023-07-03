@@ -106,9 +106,19 @@ There is currently no IDE support for *Fluent*. Contributions are welcome. It ma
   * *Fluent* may not be compatible with other `javac` plugins, though so far it seems to play nice with Lombok, at least.
   * *Fluent* will make you a more productive programmer, which may go against corporate policy.
 
+## Discussions
+
+Language design can be a divisive topic. Some interesting threads around extension methods can be found here:
+
+  * [Fluent post on hackernews](https://news.ycombinator.com/item?id=36569411)
+  * [Fluent post on reddit](https://www.reddit.com/r/java/comments/14ole9l/fluent_static_extension_methods_for_java/)
+  * [Brian Geotz on stackoverflow](https://stackoverflow.com/questions/29466427/what-was-the-design-consideration-of-not-allowing-use-site-injection-of-extensio/29494337#29494337)
+  * [Extension Methods on Wikipedia](https://en.wikipedia.org/wiki/Extension_method)
+
 ## Related Resources
 
   * [kotlin](https://kotlinlang.org): a JVM language which supports extension methods out of the box.
+  * [uniform function call syntax in D](https://tour.dlang.org/tour/en/gems/uniform-function-call-syntax-ufcs)
   * [Project Lombok](https://github.com/projectlombok/lombok): the grand-daddy of `javac` hacks.
   * [unchecked](https://github.com/rogerkeays/unchecked): evade the checked exceptions mafia in Java.
   * [Java Operator Overloading](https://github.com/amelentev/java-oo): a `javac` plugin using similar ideas.
