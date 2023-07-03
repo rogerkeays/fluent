@@ -58,9 +58,9 @@ And configure the compiler plugin:
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.11.0</version>
           <configuration>
-            <compilerArguments>
-              <Xplugin:fluent/>
-            </compilerArguments>
+            <compilerArgs>
+              <arg>-Xplugin:fluent</arg>
+            </compilerArg>
             ...
           </configuration>
         </plugin>
