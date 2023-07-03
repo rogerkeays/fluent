@@ -2,11 +2,11 @@
 
 *Fluent* allows you to call static Java methods as if they were object methods. For example, instead of writing:
 
-    assertNotEmpty(getHttpContent(createSharedUrl(website, "styles.css")));
+    assertNotEmpty(getHttpContent(createUrl(website, "styles.css")));
 
 you would write:
 
-    website.createSharedUrl("styles.css").getHttpContent().assertNotEmpty();
+    website.createUrl("styles.css").getHttpContent().assertNotEmpty();
 
 *Fluent* works by transforming the abstract syntax tree during compilation. If a method can't be resolved using Java's normal rules, *Fluent* will rewrite it as such:
 
@@ -16,7 +16,7 @@ and then give it back to the compiler. Now, the compiler will look for a static 
 
 In the above example, the extension method signatures would be:
 
-    public static URL createSharedUrl(Website website, String path) {}
+    public static URL createUrl(Website website, String path) {}
     public static String getHttpContent(URL url) {}
     public static void assertNotEmpty(String string) {}
 
@@ -113,5 +113,5 @@ There is currently no IDE support for *Fluent*. Contributions are welcome. It ma
   * [unchecked](https://github.com/rogerkeays/unchecked): evade the checked exceptions mafia in Java.
   * [Java Operator Overloading](https://github.com/amelentev/java-oo): a `javac` plugin using similar ideas.
   * [racket-fluent](https://github.com/rogerkeays/racket-fluent): fluent syntax for Racket.
-  * [more stuff you never knew you wanted](https://rogerkeays.com)
+  * [more stuff from the author you never knew you wanted](https://rogerkeays.com)
 
