@@ -79,7 +79,7 @@ If your operating system doesn't include `sh` it shouldn't be too hard to conver
 
 ## JDK Support
 
-**Fluent** is tested with the following JDKs:
+*Fluent* is tested with the following JDKs:
 
   * jdk-09.0.4
   * jdk-10.0.2
