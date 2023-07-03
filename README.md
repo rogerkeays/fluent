@@ -102,7 +102,7 @@ There is currently no IDE support for *Fluent*. Contributions are welcome. It ma
 
 ## Known Issues
 
-  * you must use parentheses around primitive numbers when calling an extension method: e.g. `(0).inc()` 
+  * you must use parentheses around numeric primitives when calling an extension method: e.g. `(0).inc()` 
   * *Fluent* may not be compatible with other `javac` plugins, though so far it seems to play nice with Lombok, at least.
   * *Fluent* will make you a more productive programmer, which may go against corporate policy.
 
