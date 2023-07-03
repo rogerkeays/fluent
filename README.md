@@ -77,6 +77,25 @@ Note, older versions of the compiler plugin use a different syntax. Refer to the
 
 If your operating system doesn't include `sh` it shouldn't be too hard to convert to whatever shell you are using. I mean, we're talking about one java file and a text file here.
 
+## JDK Support
+
+**Fluent** is tested with the following JDKs:
+
+    * jdk-09.0.4
+    * jdk-10.0.2
+    * jdk-11.0.8
+    * jdk-12.0.2
+    * jdk-13.0.2
+    * jdk-14.0.2
+    * jdk-15.0.2
+    * jdk-16.0.2
+    * jdk-17.0.2
+    * jdk-18.0.2.1
+    * jdk-19.0.2
+    * jdk-20.0.1
+    * jdk-21 (early access)
+    * jdk-22 (early access)
+
 ## IDE Support
 
 There is currently no IDE support for *Fluent*. Contributions are welcome. It may be possible to get your IDE to load the *Fluent* plugin into it's compiler. If you get it working, please [post something to github](https://github.com/rogerkeays/fluent/issues) so we can all benefit.
