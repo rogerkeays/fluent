@@ -98,7 +98,7 @@ If your operating system doesn't include `sh` it shouldn't be too hard to conver
 
 ## IDE Support
 
-There is currently no IDE support for *Fluent*. It may be possible to get your IDE to load the *Fluent* plugin into it's compiler. If you get it working, please [comment on issue #4](https://github.com/rogerkeays/fluent/issues/4) so we can all benefit. You may also be able to use Lombok or Manifold plugins for partial IDE support. See [issue #4](https://github.com/rogerkeays/fluent/issues/4) for more detail.
+There is currently no IDE support for *Fluent*. It may be possible to get your IDE to load the *Fluent* plugin into it's compiler. If you get it working, please [comment on issue #4](https://github.com/rogerkeays/fluent/issues/4) so we can all benefit.
 
 Contributions are welcome.
 
