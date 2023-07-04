@@ -13,7 +13,7 @@ import java.lang.reflect.MalformedParametersException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Field;
 import java.io.InputStream;
-import sun.misc.Unsafe;
+import jdk.internal.misc.Unsafe;
 
 public class Fluent implements Plugin {
     @Override 

@@ -28,10 +28,10 @@ Extension methods are useful when you can't (or don't want to) add methods to a 
 
 ## Quick Start
 
-Download the jar, place it on your classpath, and run `javac` using `-Xplugin:fluent`:
+Download the jar, place it on your classpath, and run `javac` with `-Xplugin:fluent -J--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED`:
 
     wget https://github.com/rogerkeays/fluent/raw/main/fluent.jar
-    javac -cp fluent.jar -Xplugin:fluent File.java
+    javac -cp fluent.jar -Xplugin:fluent -J--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED File.java
 
 ## Install Using Maven
 
@@ -60,7 +60,9 @@ And configure the compiler plugin:
           <configuration>
             <compilerArgs>
               <arg>-Xplugin:fluent</arg>
+              <arg>-J--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED</arg>
             </compilerArg>
+            <fork>true</fork>
             ...
           </configuration>
         </plugin>
