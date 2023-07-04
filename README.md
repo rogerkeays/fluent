@@ -28,7 +28,7 @@ Extension methods are useful when you can't (or don't want to) add methods to a 
 
 ## Quick Start
 
-Download the jar, place it on your classpath, and run `javac` with `-Xplugin:fluent -J--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED`:
+Download the jar, place it on your classpath, and run `javac` with `-Xplugin:fluent` and `-J--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED`:
 
     wget https://github.com/rogerkeays/fluent/raw/main/fluent.jar
     javac -cp fluent.jar -Xplugin:fluent -J--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED Test.java
