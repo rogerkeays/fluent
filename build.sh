@@ -21,17 +21,19 @@ echo $JAVA_HOME
 mkdir -p target/META-INF/services
 echo "com.sun.tools.javac.comp.Fluent" > target/META-INF/services/com.sun.source.util.Plugin
 $JAVA_HOME/bin/javac -nowarn -source 8 -target $TARGET -d target Fluent.java
+[ $? -eq 0 ] || exit 1
 cd target; $JAVA_HOME/bin/jar --create --file ../fluent.jar *; cd ..
 
 # test against all jdks
 echo "\n===== TESTING ====="
-echo "----- press enter to being testing valid code"; read x
 for JDK in $JDKS; do
     echo $JDK
     "$JDK"/bin/javac -cp fluent.jar -d target $WITH_FLUENT TestValid.java
+    [ $? -eq 0 ] || exit 1
     "$JDK"/bin/java -cp target -enableassertions TestValid
+    [ $? -eq 0 ] || exit 1
 done
-echo "\n----- press enter to begin testing code with errors"; read x
+echo "\n----- press enter to begin error test cases"; read x
 for JDK in $JDKS; do
     echo $JDK
     "$JDK"/bin/javac -cp fluent.jar -d target $WITH_FLUENT TestErrors.java
