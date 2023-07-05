@@ -67,7 +67,7 @@ public class Fluent implements Plugin {
     }
 
     // get the singleton of a class for a given context
-    Object instance(Class klass, Context context) throws Exception {
+    Object instance(Class<?> klass, Context context) throws Exception {
         return klass.getDeclaredMethod("instance", Context.class).invoke(null, context);
     }
 
