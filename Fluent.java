@@ -9,7 +9,7 @@ import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.tree.JCTree.*;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.*;
-import java.lang.reflect.MalformedParametersException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Field;
 import java.io.InputStream;
@@ -51,17 +51,21 @@ public class Fluent implements Plugin {
     // this is necessary to be considered part of the same package
     // otherwise we cannot override package/protected methods
     Class reload(Class klass, Context context) throws Exception {
-        InputStream is = klass.getClassLoader().getResourceAsStream(
+        InputStream is = Fluent.class.getClassLoader().getResourceAsStream(
                 klass.getName().replace('.', '/') + ".class");
         byte[] bytes = new byte[is.available()];
         is.read(bytes);
-        Method m = ClassLoader.class.getDeclaredMethod("defineClass", new Class[] {
+        Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", new Class[] {
                 String.class, byte[].class, int.class, int.class });
-        m.setAccessible(true);
-        return (Class) m.invoke(JavaCompiler.class.getClassLoader(), 
-                klass.getName(), bytes, 0, bytes.length);
+        defineClass.setAccessible(true);
+        try {
+            return (Class) defineClass.invoke(JavaCompiler.class.getClassLoader(), 
+                    klass.getName(), bytes, 0, bytes.length);
+        } catch (InvocationTargetException e) {
+            return klass; // jshell hack: class already reloaded, but no way to tell
+        }
     }
-    
+
     // get the singleton of a class for a given context
     Object instance(Class klass, Context context) throws Exception {
         return klass.getDeclaredMethod("instance", Context.class).invoke(null, context);
