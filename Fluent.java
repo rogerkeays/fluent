@@ -26,7 +26,7 @@ public class Fluent implements Plugin {
             Method open = Module.class.getDeclaredMethod("implAddOpens", String.class, Module.class);
             Field f = Unsafe.class.getDeclaredField("theUnsafe"); f.setAccessible(true);
             Unsafe unsafe = (Unsafe) f.get(null);
-            unsafe.putBoolean(open, 12, true); // make it public
+            unsafe.putBoolean(open, 12, true); // make impleAddOpens public
             open.invoke(compilerModule, "com.sun.tools.javac.api", fluentModule);
             open.invoke(compilerModule, "com.sun.tools.javac.comp", fluentModule);
             open.invoke(compilerModule, "com.sun.tools.javac.main", fluentModule);
