@@ -112,7 +112,7 @@ There is currently no IDE support for *Fluent*. Contributions are welcome. It ma
 
   * you must use parentheses around numeric primitives when calling an extension method: e.g. `(0).inc()` 
   * *Fluent* may not be compatible with other `javac` plugins, though so far it seems to play nice with Lombok and [Unchecked](https://github.com/rogerkeays/unchecked), at least.
-  * If you are using *Fluent* with *Unchecked* on JDK 9 or 10, you must specify the `-Xplugin:fluent` option first.
+  * If you are using *Fluent* with [Unchecked](https://github.com/rogerkeays/unchecked) on JDK 9 or 10, you must specify the `-Xplugin:fluent` option first.
 
 Please submit issues to the [github issue tracker](https://github.com/rogerkeays/fluent/issues). Please be sure to include the JDK version and build tools you are using. Before submitted a bug, please try a clean build of your project.
 
