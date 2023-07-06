@@ -81,8 +81,6 @@ Note, older versions of the compiler plugin use a different syntax. Refer to the
     cd fluent
     ./build.sh
 
-If your operating system doesn't include `sh` it shouldn't be too hard to convert to whatever shell you are using. I mean, we're talking about one java file and a text file here.
-
 ## JDK Support
 
 *Fluent* is tested with the following JDKs:
@@ -131,4 +129,9 @@ Language design can be a divisive topic. Some interesting threads around extensi
   * [racket-fluent](https://github.com/rogerkeays/racket-fluent): fluent syntax for Racket.
   * [unchecked](https://github.com/rogerkeays/unchecked): evade the checked exceptions mafia in Java.
   * [more stuff you never knew you wanted](https://rogerkeays.com)
+
+## Disclaimer
+
+  * *Unchecked* is not supported or endorsed by the OpenJDK team.
+  * The reasonable man adapts himself to the world. The unreasonable one persists in trying to adapt the world to himself. Therefore all progress depends on the unreasonable man. --George Bernard Shaw
 
