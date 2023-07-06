@@ -132,7 +132,7 @@ Language design can be a divisive topic. Some interesting threads around extensi
   * [Lombok](https://github.com/projectlombok/lombok): the grand-daddy of `javac` hacks, with experimental support for extension methods.
   * [Manifold](https://manifold.systems): a `javac` plugin with many features, including extension methods.
   * [racket-fluent](https://github.com/rogerkeays/racket-fluent): fluent syntax for Racket.
-  * [Unchecked](https://github.com/rogerkeays/unchecked): evade the checked exceptions mafia in Java.
+  * [Unchecked](https://github.com/rogerkeays/unchecked): say goodbye to checked exceptions forever.
   * [More stuff you never knew you wanted](https://rogerkeays.com).
 
 ## Disclaimer
