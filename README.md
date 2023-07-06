@@ -137,6 +137,6 @@ Language design can be a divisive topic. Some interesting threads around extensi
 
 ## Disclaimer
 
-  * *Unchecked* is not supported or endorsed by the OpenJDK team.
+  * *Fluent* is not supported or endorsed by the OpenJDK team.
   * The reasonable man adapts himself to the world. The unreasonable one persists in trying to adapt the world to himself. Therefore all progress depends on the unreasonable man. --George Bernard Shaw
 
