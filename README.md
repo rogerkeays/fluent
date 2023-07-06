@@ -123,12 +123,12 @@ Language design can be a divisive topic. Some interesting threads around extensi
 
 ## Related Resources
 
-  * [kotlin](https://kotlinlang.org): a JVM language which supports extension methods out of the box.
+  * [Kotlin](https://kotlinlang.org): a JVM language which supports extension methods out of the box.
   * [Lombok](https://github.com/projectlombok/lombok): the grand-daddy of `javac` hacks, with experimental support for extension methods.
   * [Manifold](https://manifold.systems): a `javac` plugin with many features, including extension methods.
   * [racket-fluent](https://github.com/rogerkeays/racket-fluent): fluent syntax for Racket.
-  * [unchecked](https://github.com/rogerkeays/unchecked): evade the checked exceptions mafia in Java.
-  * [more stuff you never knew you wanted](https://rogerkeays.com)
+  * [Unchecked](https://github.com/rogerkeays/unchecked): evade the checked exceptions mafia in Java.
+  * [More stuff you never knew you wanted](https://rogerkeays.com).
 
 ## Disclaimer
 
