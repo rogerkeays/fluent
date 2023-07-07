@@ -6,7 +6,7 @@ import static java.util.Collections.sort;
 public class TestValid {
     public static void main(String [] args) {
 
-        // native types
+        // primitive types
         //assert 0.inc().equals(inc(0));  // can't parse this: ambiguous
         assert (0).inc() == inc(0);
         assert 0f.incf() == incf(0f);
@@ -16,6 +16,9 @@ public class TestValid {
         assert Integer.valueOf(0).incBoxed().equals(incBoxed(Integer.valueOf(0)));
         assert Float.valueOf(0).incfBoxed().equals(incfBoxed(Float.valueOf(0)));
         assert Boolean.TRUE.invertBoxed().equals(invertBoxed(Boolean.TRUE));
+
+        // mixed boxed and unboxed
+        assert true.invertReturnBoxed().equals(invertReturnBoxed(true));
 
         // string literals
         assert "hello".duplicate().equals(duplicate("hello"));
@@ -44,6 +47,7 @@ public class TestValid {
     public static int inc(int i) { return i + 1; }
     public static float incf(float f) { return f + 1.0f; }
     public static boolean invert(boolean b) { return !b; }
+    public static Boolean invertReturnBoxed(boolean b) { return !b; }
     public static Integer incBoxed(Integer i) { return i + 1; }
     public static Float incfBoxed(Float f) { return f + 1.0f; }
     public static Boolean invertBoxed(Boolean b) { return !b; }
