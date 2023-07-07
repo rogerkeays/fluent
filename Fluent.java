@@ -142,9 +142,10 @@ public class Fluent implements Plugin {
                 if (pkind().contains(KindSelector.VAL_MTH))
                     skind = KindSelector.of(skind, KindSelector.VAL, KindSelector.TYP);
             }
-
             Type site = attribTree(tree.selected, env, new ResultInfo(skind, Type.noType));
-            if (site.isPrimitive()) throw new AbsentMethodException();
+            if (site.isPrimitive() && tree.name != names._class) {
+                throw new AbsentMethodException();
+            }
             super.visitSelect(tree);
         }
     }

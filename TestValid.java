@@ -35,6 +35,10 @@ public class TestValid {
         // static imports
         sort(Arrays.asList(3, 2, 1));
         Arrays.asList(3, 2, 1).sort();
+
+        // don't transform [primitive].class
+        boolean.class.equals(boolean.class);
+        Boolean.class.equals(Boolean.class);
     }
 
     public static int inc(int i) { return i + 1; }
