@@ -86,30 +86,6 @@ public class Fluent implements Plugin {
         f.set(instance(klass, context), value);
     }
 
-    public static class FluentResolve extends Resolve {
-        protected FluentResolve(Context context) {
-            super(context);
-        }
-        public static FluentResolve instance(Context context) {
-            context.put(resolveKey, (Resolve) null); // superclass constructor will put it back
-            return new FluentResolve(context);
-        }
-
-        // throw an exception when an object method is not found
-        // this will cause the attributor to transform the syntax tree and try again
-        @Override
-        Symbol findMethod(Env<AttrContext> env, Type site, Name name, List<Type> argtypes,
-                          List<Type> typeargtypes, boolean boxing, boolean varargs) {
-            Symbol symbol = super.findMethod(env, site, name, argtypes, typeargtypes, boxing, varargs);
-            if (symbol.kind == Kinds.Kind.ABSENT_MTH
-                    && env.tree instanceof JCMethodInvocation 
-                    && ((JCMethodInvocation) env.tree).getMethodSelect() instanceof JCFieldAccess) {
-                throw new AbsentMethodException();
-            }
-            return symbol;
-        }
-    }
-
     public static class FluentAttr extends Attr {
         Context context;
 
@@ -136,6 +112,30 @@ public class Fluent implements Plugin {
         }
     }
 
+    public static class FluentResolve extends Resolve {
+        protected FluentResolve(Context context) {
+            super(context);
+        }
+        public static FluentResolve instance(Context context) {
+            context.put(resolveKey, (Resolve) null); // superclass constructor will put it back
+            return new FluentResolve(context);
+        }
+
+        // throw an exception when an object method is not found
+        // this will cause the attributor to transform the syntax tree and try again
+        @Override
+        Symbol findMethod(Env<AttrContext> env, Type site, Name name, List<Type> argtypes,
+                          List<Type> typeargtypes, boolean boxing, boolean varargs) {
+            Symbol symbol = super.findMethod(env, site, name, argtypes, typeargtypes, boxing, varargs);
+            if (symbol.kind == Kinds.Kind.ABSENT_MTH
+                    && env.tree instanceof JCMethodInvocation 
+                    && ((JCMethodInvocation) env.tree).getMethodSelect() instanceof JCFieldAccess) {
+                throw new AbsentMethodException();
+            }
+            return symbol;
+        }
+    }
+
     public static class FluentLog extends Log {
         Context context;
 
@@ -148,7 +148,8 @@ public class Fluent implements Plugin {
             return new FluentLog(context);
         }
 
-        // catch can't dereference a primitive error
+        // catch can't dereference a primitive error and throw an error
+        // causing the ast to be transformed
         @Override
         public void error(DiagnosticPosition pos, Error errorKey) {
             if (errorKey.key().equals("compiler.err.cant.deref")) {
