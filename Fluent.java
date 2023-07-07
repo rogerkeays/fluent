@@ -6,9 +6,13 @@ import com.sun.tools.javac.api.*;
 import com.sun.tools.javac.code.*;
 import com.sun.tools.javac.code.Kinds.KindSelector;
 import com.sun.tools.javac.main.JavaCompiler;
+import com.sun.tools.javac.processing.*;
 import com.sun.tools.javac.tree.JCTree.*;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.*;
+import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
+import com.sun.tools.javac.util.JCDiagnostic.DiagnosticFlag;
+import com.sun.tools.javac.util.JCDiagnostic.Error;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Field;
@@ -20,24 +24,28 @@ public class Fluent implements Plugin {
     public void init(JavacTask task, String... args) {
         try {
             // open access to compiler internals, bypassing module restrictions
-            Module fluentModule = Fluent.class.getModule();
+            Module unnamedModule = Fluent.class.getModule();
             Module compilerModule = ModuleLayer.boot().findModule("jdk.compiler").get();
             Module baseModule = ModuleLayer.boot().findModule("java.base").get();
             Method open = Module.class.getDeclaredMethod("implAddOpens", String.class, Module.class);
             Field f = Unsafe.class.getDeclaredField("theUnsafe"); f.setAccessible(true);
             Unsafe unsafe = (Unsafe) f.get(null);
             unsafe.putBoolean(open, 12, true); // make impleAddOpens public
-            open.invoke(compilerModule, "com.sun.tools.javac.api", fluentModule);
-            open.invoke(compilerModule, "com.sun.tools.javac.comp", fluentModule);
-            open.invoke(compilerModule, "com.sun.tools.javac.main", fluentModule);
-            open.invoke(compilerModule, "com.sun.tools.javac.tree", fluentModule);
-            open.invoke(compilerModule, "com.sun.tools.javac.util", fluentModule);
-            open.invoke(baseModule, "java.lang", fluentModule);
+            open.invoke(compilerModule, "com.sun.tools.javac.api", unnamedModule);
+            open.invoke(compilerModule, "com.sun.tools.javac.code", unnamedModule);
+            open.invoke(compilerModule, "com.sun.tools.javac.comp", unnamedModule);
+            open.invoke(compilerModule, "com.sun.tools.javac.main", unnamedModule);
+            open.invoke(compilerModule, "com.sun.tools.javac.processing", unnamedModule);
+            open.invoke(compilerModule, "com.sun.tools.javac.tree", unnamedModule);
+            open.invoke(compilerModule, "com.sun.tools.javac.util", unnamedModule);
+            open.invoke(baseModule, "java.lang", unnamedModule);
 
             // patch extended classes into the compiler context
             Context context = ((BasicJavacTask) task).getContext();
             reload(AbsentMethodException.class, context);
             Object resolve = instance(reload(FluentResolve.class, context), context);
+            Object log = instance(reload(FluentLog.class, context), context);
+            inject(Flow.class, "log", log, context);
             Object attr = instance(reload(FluentAttr.class, context), context);
             inject(JavaCompiler.class, "attr", attr, context);
             inject(ArgumentAttr.class, "attr", attr, context);
@@ -126,27 +134,27 @@ public class Fluent implements Plugin {
                 super.visitApply(tree);
             }
         }
+    }
 
-        // look for fluent methods on primitive types
+    public static class FluentLog extends Log {
+        Context context;
+
+        protected FluentLog(Context context) {
+            super(context);
+            this.context = context;
+        }
+        public static FluentLog instance(Context context) {
+            context.put(logKey, (Log) null); // superclass constructor will put it back
+            return new FluentLog(context);
+        }
+
+        // catch can't dereference a primitive error
         @Override
-        public void visitSelect(JCFieldAccess tree) {
-            KindSelector skind = KindSelector.NIL;
-            if (tree.name == names._this || tree.name == names._super ||
-                    tree.name == names._class) {
-                skind = KindSelector.TYP;
-            } else {
-                if (pkind().contains(KindSelector.PCK))
-                    skind = KindSelector.of(skind, KindSelector.PCK);
-                if (pkind().contains(KindSelector.TYP))
-                    skind = KindSelector.of(skind, KindSelector.TYP, KindSelector.PCK);
-                if (pkind().contains(KindSelector.VAL_MTH))
-                    skind = KindSelector.of(skind, KindSelector.VAL, KindSelector.TYP);
-            }
-            Type site = attribTree(tree.selected, env, new ResultInfo(skind, Type.noType));
-            if (site.isPrimitive() && tree.name != names._class) {
+        public void error(DiagnosticPosition pos, Error errorKey) {
+            if (errorKey.key().equals("compiler.err.cant.deref")) {
                 throw new AbsentMethodException();
             }
-            super.visitSelect(tree);
+            super.error(pos, errorKey);
         }
     }
 
