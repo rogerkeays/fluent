@@ -11,11 +11,15 @@ JAR=$NAME.jar
 
 # directories containing jdks to test against, separated by spaces
 JDKS="$JAVA_HOME"
-JDKS="$HOME/tools/jdk-*"
+#JDKS="$HOME/tools/jdk-*"
 
 # javac arguments to invoke the compiled plugin
 WITH_PLUGINS="-Xplugin:$NAME -J--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED"
 TEST_CLASSPATH=$JAR
+
+# for testing with the unchecked plugin
+#WITH_PLUGINS="-Xplugin:unchecked -Xplugin:$NAME -J--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED"
+#TEST_CLASSPATH=$JAR:../unchecked/unchecked.jar
 
 # compile and build jar
 # note: -source 8 is required to import com.sun.tools.javac.*
