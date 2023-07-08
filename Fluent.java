@@ -144,14 +144,13 @@ public class Fluent implements Plugin {
             return new FluentLog(context);
         }
 
-        // catch can't dereference a primitive error and throw an error
-        // causing the ast to be transformed
+        // throw an exception when a primitive is referenced, causing a transformation
         @Override
-        public void error(DiagnosticPosition pos, Error errorKey) {
-            if (errorKey.key().equals("compiler.err.cant.deref")) {
+        public void report(JCDiagnostic diagnostic) {
+            if (diagnostic.getCode().equals("compiler.err.cant.deref")) {
                 throw new AbsentMethodException();
             }
-            super.error(pos, errorKey);
+            super.report(diagnostic);
         }
     }
 
