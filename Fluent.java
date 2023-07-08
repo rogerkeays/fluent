@@ -41,7 +41,7 @@ public class Fluent implements Plugin {
             reload(AbsentMethodException.class, context);
             Object resolve = instance(reload(FluentResolve.class, context), context);
             Object log = instance(reload(FluentLog.class, context), context);
-            inject(Flow.class, "log", log, context);
+            inject(Attr.class, "log", log, context);
             Object attr = instance(reload(FluentAttr.class, context), context);
             inject(JavaCompiler.class, "attr", attr, context);
             inject(ArgumentAttr.class, "attr", attr, context);
