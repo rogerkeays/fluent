@@ -117,8 +117,7 @@ public class Fluent implements Plugin {
             return new FluentResolve(context);
         }
 
-        // throw an exception when an object method is not found
-        // this will cause the attributor to transform the syntax tree and try again
+        // throw an exception when an object method is not found, causing a transformation
         @Override
         Symbol findMethod(Env<AttrContext> env, Type site, Name name, List<Type> argtypes,
                           List<Type> typeargtypes, boolean boxing, boolean varargs) {
