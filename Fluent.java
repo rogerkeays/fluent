@@ -39,7 +39,6 @@ public class Fluent implements Plugin {
             reload(AbsentMethodException.class, context);
             Object resolve = instance(reload(FluentResolve.class, context), context);
             Object log = instance(reload(FluentLog.class, context), context);
-            inject(Attr.class, "log", log, context);
             Object attr = instance(reload(FluentAttr.class, context), context);
             inject(JavaCompiler.class, "attr", attr, context);
             inject(ArgumentAttr.class, "attr", attr, context);
@@ -88,8 +87,14 @@ public class Fluent implements Plugin {
             this.context = context;
         }
         public static FluentAttr instance(Context context) {
-            context.put(attrKey, (FluentAttr) null);
-            return new FluentAttr(context);
+            Attr current = (Attr) context.get(attrKey);
+            if (current != null && current instanceof FluentAttr) {
+                return (FluentAttr) current;
+            } else {
+                // superclass constructor will register the singleton
+                context.put(attrKey, (FluentAttr) null);
+                return new FluentAttr(context);
+            }
         }
         
         // transform the abstract syntax tree when an object method is not found
@@ -111,8 +116,14 @@ public class Fluent implements Plugin {
             super(context);
         }
         public static FluentResolve instance(Context context) {
-            context.put(resolveKey, (Resolve) null);
-            return new FluentResolve(context);
+            Resolve current = (Resolve) context.get(resolveKey);
+            if (current != null && current instanceof FluentResolve) {
+                return (FluentResolve) current;
+            } else {
+                // superclass constructor will register the singleton
+                context.put(resolveKey, (Resolve) null);
+                return new FluentResolve(context);
+            }
         }
 
         // throw an exception when an object method is not found, causing a transformation
@@ -137,8 +148,14 @@ public class Fluent implements Plugin {
             this.context = context;
         }
         public static FluentLog instance(Context context) {
-            context.put(logKey, (Log) null);
-            return new FluentLog(context);
+            Log current = (Log) context.get(logKey);
+            if (current instanceof FluentLog) {
+                return (FluentLog) current;
+            } else {
+                // superclass constructor will register the singleton
+                context.put(logKey, (Log) null);
+                return new FluentLog(context);
+            }
         }
 
         // throw an exception when a primitive is referenced, causing a transformation
