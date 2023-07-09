@@ -4,7 +4,7 @@ import com.sun.source.util.*;
 import com.sun.source.tree.*;
 import com.sun.tools.javac.api.*;
 import com.sun.tools.javac.code.*;
-import com.sun.tools.javac.main.JavaCompiler;
+import com.sun.tools.javac.main.*;
 import com.sun.tools.javac.tree.JCTree.*;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.*;
@@ -14,47 +14,58 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Field;
 import java.io.InputStream;
-import jdk.internal.misc.Unsafe;
 
 public class Fluent implements Plugin {
     @Override 
     public void init(JavacTask task, String... args) {
         try {
-            // open access to compiler internals, bypassing module restrictions
+            // open access to the compiler packages
+            // requires -J--add-opens=java.base/java.lang=ALL-UNNAMED
             Module unnamedModule = Fluent.class.getModule();
             Module compilerModule = ModuleLayer.boot().findModule("jdk.compiler").get();
             Module baseModule = ModuleLayer.boot().findModule("java.base").get();
-            Method open = Module.class.getDeclaredMethod("implAddOpens", String.class, Module.class);
-            Field f = Unsafe.class.getDeclaredField("theUnsafe"); f.setAccessible(true);
-            Unsafe unsafe = (Unsafe) f.get(null);
-            unsafe.putBoolean(open, 12, true); // make impleAddOpens public
-            open.invoke(compilerModule, "com.sun.tools.javac.api", unnamedModule);
-            open.invoke(compilerModule, "com.sun.tools.javac.code", unnamedModule);
-            open.invoke(compilerModule, "com.sun.tools.javac.comp", unnamedModule);
-            open.invoke(compilerModule, "com.sun.tools.javac.main", unnamedModule);
-            open.invoke(compilerModule, "com.sun.tools.javac.tree", unnamedModule);
-            open.invoke(compilerModule, "com.sun.tools.javac.util", unnamedModule);
-            open.invoke(baseModule, "java.lang", unnamedModule);
-
-            // patch extended classes into the compiler context
-            Context context = ((BasicJavacTask) task).getContext();
-            reload(AbsentMethodException.class, context);
-            Object resolve = instance(reload(FluentResolve.class, context), context);
-            Object log = instance(reload(FluentLog.class, context), context);
-            inject(Attr.class, "log", log, context);
-            Object attr = instance(reload(FluentAttr.class, context), context);
-            inject(JavaCompiler.class, "attr", attr, context);
-            inject(ArgumentAttr.class, "attr", attr, context);
-            inject(DeferredAttr.class, "attr", attr, context);
+            Method opener = Module.class.getDeclaredMethod("implAddOpens", String.class, Module.class);
+            opener.setAccessible(true);
+            opener.invoke(compilerModule, "com.sun.tools.javac.api", unnamedModule);
+            opener.invoke(compilerModule, "com.sun.tools.javac.code", unnamedModule);
+            opener.invoke(compilerModule, "com.sun.tools.javac.comp", unnamedModule);
+            opener.invoke(compilerModule, "com.sun.tools.javac.main", unnamedModule);
+            opener.invoke(compilerModule, "com.sun.tools.javac.tree", unnamedModule);
+            opener.invoke(compilerModule, "com.sun.tools.javac.util", unnamedModule);
+            opener.invoke(baseModule, "java.lang", unnamedModule);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
+        // patch compiler as late as possible to avoid breaking state
+        task.addTaskListener(new TaskListener() {
+            public void started(TaskEvent e) {
+                if (e.getKind().equals(TaskEvent.Kind.ANALYZE)) {
+                    try {
+
+                        // patch extended classes into the compiler context
+                        Context context = ((BasicJavacTask) task).getContext();
+                        reload(AbsentMethodException.class, context);
+                        Object resolve = instance(reload(FluentResolve.class, context), context);
+                        Object log = instance(reload(FluentLog.class, context), context);
+                        inject(Attr.class, "log", log, context);
+                        Object attr = instance(reload(FluentAttr.class, context), context);
+                        inject(JavaCompiler.class, "attr", attr, context);
+                        inject(ArgumentAttr.class, "attr", attr, context);
+                        inject(DeferredAttr.class, "attr", attr, context);
+                    } catch (Exception ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
+            }
+            public void finished(TaskEvent e) {}
+        });
     }
 
-    // reload a class using the jdk.compiler classloader
+    // reload a declared class using the jdk.compiler classloader
     // this is necessary to be considered part of the same package
     // otherwise we cannot override package/protected methods
-    Class reload(Class klass, Context context) throws Exception {
+    Class<?> reload(Class klass, Context context) throws Exception {
         InputStream is = Fluent.class.getClassLoader().getResourceAsStream(
                 klass.getName().replace('.', '/') + ".class");
         byte[] bytes = new byte[is.available()];
@@ -70,16 +81,16 @@ public class Fluent implements Plugin {
         }
     }
 
-    // get the singleton of a class for a given context
-    Object instance(Class<?> klass, Context context) throws Exception {
-        return klass.getDeclaredMethod("instance", Context.class).invoke(null, context);
-    }
-
     // use reflection to inject components into final/private fields
     void inject(Class klass, String field, Object value, Context context) throws Exception {
         Field f = klass.getDeclaredField(field);
         f.setAccessible(true);
         f.set(instance(klass, context), value);
+    }
+
+    // get the singleton of a class for a given context
+    Object instance(Class<?> klass, Context context) throws Exception {
+        return klass.getDeclaredMethod("instance", Context.class).invoke(null, context);
     }
 
     public static class FluentAttr extends Attr {
@@ -90,7 +101,7 @@ public class Fluent implements Plugin {
             this.context = context;
         }
         public static FluentAttr instance(Context context) {
-            context.put(attrKey, (FluentAttr) null); // superclass constructor will put it back
+            context.put(attrKey, (FluentAttr) null);
             return new FluentAttr(context);
         }
         
@@ -113,7 +124,7 @@ public class Fluent implements Plugin {
             super(context);
         }
         public static FluentResolve instance(Context context) {
-            context.put(resolveKey, (Resolve) null); // superclass constructor will put it back
+            context.put(resolveKey, (Resolve) null);
             return new FluentResolve(context);
         }
 
@@ -139,7 +150,7 @@ public class Fluent implements Plugin {
             this.context = context;
         }
         public static FluentLog instance(Context context) {
-            context.put(logKey, (Log) null); // superclass constructor will put it back
+            context.put(logKey, (Log) null);
             return new FluentLog(context);
         }
 
