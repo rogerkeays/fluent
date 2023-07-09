@@ -32,13 +32,13 @@ public class Fluent implements Plugin {
             opener.invoke(compilerModule, "com.sun.tools.javac.main", unnamedModule);
             opener.invoke(compilerModule, "com.sun.tools.javac.tree", unnamedModule);
             opener.invoke(compilerModule, "com.sun.tools.javac.util", unnamedModule);
-            opener.invoke(baseModule, "java.lang", unnamedModule);
 
             // patch extended classes into the compiler context
             Context context = ((BasicJavacTask) task).getContext();
             reload(AbsentMethodException.class, context);
             Object resolve = instance(reload(FluentResolve.class, context), context);
             Object log = instance(reload(FluentLog.class, context), context);
+            inject(Attr.class, "log", log, context);
             Object attr = instance(reload(FluentAttr.class, context), context);
             inject(JavaCompiler.class, "attr", attr, context);
             inject(ArgumentAttr.class, "attr", attr, context);
