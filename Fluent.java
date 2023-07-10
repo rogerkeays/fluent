@@ -13,7 +13,6 @@ import com.sun.tools.javac.util.JCDiagnostic.Error;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Field;
-import java.io.InputStream;
 
 public class Fluent implements Plugin {
     @Override 
@@ -52,7 +51,7 @@ public class Fluent implements Plugin {
     // this is necessary to be considered part of the same package
     // otherwise we cannot override package/protected methods
     Class<?> reload(Class klass, Context context) throws Exception {
-        InputStream is = Fluent.class.getClassLoader().getResourceAsStream(
+        java.io.InputStream is = Fluent.class.getClassLoader().getResourceAsStream(
                 klass.getName().replace('.', '/') + ".class");
         byte[] bytes = new byte[is.available()];
         is.read(bytes);
