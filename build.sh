@@ -3,7 +3,7 @@
 # build configuration
 GROUP=jamaica
 NAME=fluent
-VERSION=0.2.1
+VERSION=0.3.0
 TARGET=9
 
 # use sun package to override package methods
