@@ -43,8 +43,10 @@ public class Fluent implements Plugin {
             // patch extended classes into the compiler context
             Context context = ((BasicJavacTask) task).getContext();
             reload(AbsentMethodException.class);
+            reload(FluentDiagnosticHandler.class)
+                    .getConstructor(Log.class)
+                    .newInstance((Log) context.get(Log.logKey));
             Object resolve = instance(reload(FluentResolve.class), context);
-            Object log = instance(reload(FluentLog.class), context);
             Object attr = instance(reload(FluentAttr.class), context);
             Map singletons = (Map) getProtected(context, "ht");
             for (Object component : singletons.values()) {
@@ -56,51 +58,6 @@ public class Fluent implements Plugin {
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
-    }
-
-    // reload a declared class using the jdk.compiler classloader
-    // this is necessary to be considered part of the same package
-    // otherwise we cannot override package/protected methods
-    Class<?> reload(Class klass) throws Exception {
-        java.io.InputStream is = Fluent.class.getClassLoader().getResourceAsStream(
-                klass.getName().replace('.', '/') + ".class");
-        byte[] bytes = new byte[is.available()];
-        is.read(bytes);
-        Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", new Class[] {
-                String.class, byte[].class, int.class, int.class });
-        defineClass.setAccessible(true);
-        try {
-            return (Class) defineClass.invoke(Context.class.getClassLoader(),
-                    klass.getName(), bytes, 0, bytes.length);
-        } catch (InvocationTargetException e) {
-            return klass; // jshell hack: class already reloaded, but no way to tell
-        }
-    }
-
-    // use reflection to inject components into final/private fields
-    void inject(Class klass, String field, Object value, Context context) throws Exception {
-        Field f = klass.getDeclaredField(field);
-        f.setAccessible(true);
-        f.set(instance(klass, context), value);
-    }
-
-    // get the singleton of a class for a given context
-    Object instance(Class<?> klass, Context context) throws Exception {
-        return klass.getDeclaredMethod("instance", Context.class).invoke(null, context);
-    }
-
-    // get a value from an inaccessible field
-    private Object getProtected(Object object, String field) throws Exception {
-        Field f = object.getClass().getDeclaredField(field);
-        f.setAccessible(true);
-        return f.get(object);
-    }
-
-    // set a value for an inaccessible field
-    private void setProtected(Object object, String field, Object value) throws Exception {
-        Field f = object.getClass().getDeclaredField(field);
-        f.setAccessible(true);
-        f.set(object, value);
     }
 
     public static class FluentAttr extends Attr {
@@ -164,22 +121,9 @@ public class Fluent implements Plugin {
         }
     }
 
-    public static class FluentLog extends Log {
-        Context context;
-
-        protected FluentLog(Context context) {
-            super(context);
-            this.context = context;
-        }
-        public static FluentLog instance(Context context) {
-            Log current = (Log) context.get(logKey);
-            if (current instanceof FluentLog) {
-                return (FluentLog) current;
-            } else {
-                // superclass constructor will register the singleton
-                context.put(logKey, (Log) null);
-                return new FluentLog(context);
-            }
+    public static class FluentDiagnosticHandler extends Log.DiagnosticHandler {
+        public FluentDiagnosticHandler(Log log) {
+            install(log);
         }
 
         // throw an exception when a primitive is referenced, causing a transformation
@@ -188,8 +132,46 @@ public class Fluent implements Plugin {
             if (diagnostic.getCode().equals("compiler.err.cant.deref")) {
                 throw new AbsentMethodException();
             }
-            super.report(diagnostic);
+            prev.report(diagnostic);
         }
+    }
+
+    // reload a declared class using the jdk.compiler classloader
+    // this is necessary to be considered part of the same package
+    // otherwise we cannot override package/protected methods
+    private Class<?> reload(Class klass) throws Exception {
+        java.io.InputStream is = Fluent.class.getClassLoader().getResourceAsStream(
+                klass.getName().replace('.', '/') + ".class");
+        byte[] bytes = new byte[is.available()];
+        is.read(bytes);
+        Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", new Class[] {
+                String.class, byte[].class, int.class, int.class });
+        defineClass.setAccessible(true);
+        try {
+            return (Class) defineClass.invoke(Context.class.getClassLoader(),
+                    klass.getName(), bytes, 0, bytes.length);
+        } catch (InvocationTargetException e) {
+            return klass; // jshell hack: class already reloaded, but no way to tell
+        }
+    }
+
+    // get the singleton of a class for a given context
+    private Object instance(Class<?> klass, Context context) throws Exception {
+        return klass.getDeclaredMethod("instance", Context.class).invoke(null, context);
+    }
+
+    // get a value from an inaccessible field
+    private Object getProtected(Object object, String field) throws Exception {
+        Field f = object.getClass().getDeclaredField(field);
+        f.setAccessible(true);
+        return f.get(object);
+    }
+
+    // set a value for an inaccessible field
+    private void setProtected(Object object, String field, Object value) throws Exception {
+        Field f = object.getClass().getDeclaredField(field);
+        f.setAccessible(true);
+        f.set(object, value);
     }
 
     public static class AbsentMethodException extends RuntimeException {}
