@@ -13,9 +13,10 @@ import com.sun.tools.javac.util.JCDiagnostic.Error;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Field;
+import java.util.Map;
 
 public class Fluent implements Plugin {
-    @Override 
+    @Override
     public void init(JavacTask task, String... args) {
         try {
             // open access to the compiler packages
@@ -25,23 +26,33 @@ public class Fluent implements Plugin {
             Module baseModule = ModuleLayer.boot().findModule("java.base").get();
             Method opener = Module.class.getDeclaredMethod("implAddOpens", String.class, Module.class);
             opener.setAccessible(true);
-            opener.invoke(compilerModule, "com.sun.tools.javac.api", unnamedModule);
-            opener.invoke(compilerModule, "com.sun.tools.javac.code", unnamedModule);
-            opener.invoke(compilerModule, "com.sun.tools.javac.comp", unnamedModule);
-            opener.invoke(compilerModule, "com.sun.tools.javac.main", unnamedModule);
-            opener.invoke(compilerModule, "com.sun.tools.javac.tree", unnamedModule);
-            opener.invoke(compilerModule, "com.sun.tools.javac.util", unnamedModule);
+            for (String packg : new String[] {
+                    "com.sun.tools.javac.api",
+                    "com.sun.tools.javac.code",
+                    "com.sun.tools.javac.comp",
+                    "com.sun.tools.javac.jvm",
+                    "com.sun.tools.javac.main",
+                    "com.sun.tools.javac.model",
+                    "com.sun.tools.javac.parser",
+                    "com.sun.tools.javac.processing",
+                    "com.sun.tools.javac.util",
+                    "com.sun.tools.javac.util" }) {
+                opener.invoke(compilerModule, packg, unnamedModule);
+            }
 
             // patch extended classes into the compiler context
             Context context = ((BasicJavacTask) task).getContext();
-            reload(AbsentMethodException.class, context);
-            Object resolve = instance(reload(FluentResolve.class, context), context);
-            Object log = instance(reload(FluentLog.class, context), context);
-            inject(Attr.class, "log", log, context);
-            Object attr = instance(reload(FluentAttr.class, context), context);
-            inject(JavaCompiler.class, "attr", attr, context);
-            inject(ArgumentAttr.class, "attr", attr, context);
-            inject(DeferredAttr.class, "attr", attr, context);
+            reload(AbsentMethodException.class);
+            Object resolve = instance(reload(FluentResolve.class), context);
+            Object log = instance(reload(FluentLog.class), context);
+            Object attr = instance(reload(FluentAttr.class), context);
+            Map singletons = (Map) getProtected(context, "ht");
+            for (Object component : singletons.values()) {
+                if (component != null) {
+                    try { setProtected(component, "attr", attr); } catch (NoSuchFieldException e) {}
+                    try { setProtected(component, "rs", resolve); } catch (NoSuchFieldException e) {}
+                }
+            }
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
@@ -50,7 +61,7 @@ public class Fluent implements Plugin {
     // reload a declared class using the jdk.compiler classloader
     // this is necessary to be considered part of the same package
     // otherwise we cannot override package/protected methods
-    Class<?> reload(Class klass, Context context) throws Exception {
+    Class<?> reload(Class klass) throws Exception {
         java.io.InputStream is = Fluent.class.getClassLoader().getResourceAsStream(
                 klass.getName().replace('.', '/') + ".class");
         byte[] bytes = new byte[is.available()];
@@ -59,7 +70,7 @@ public class Fluent implements Plugin {
                 String.class, byte[].class, int.class, int.class });
         defineClass.setAccessible(true);
         try {
-            return (Class) defineClass.invoke(JavaCompiler.class.getClassLoader(), 
+            return (Class) defineClass.invoke(Context.class.getClassLoader(),
                     klass.getName(), bytes, 0, bytes.length);
         } catch (InvocationTargetException e) {
             return klass; // jshell hack: class already reloaded, but no way to tell
@@ -78,10 +89,24 @@ public class Fluent implements Plugin {
         return klass.getDeclaredMethod("instance", Context.class).invoke(null, context);
     }
 
+    // get a value from an inaccessible field
+    private Object getProtected(Object object, String field) throws Exception {
+        Field f = object.getClass().getDeclaredField(field);
+        f.setAccessible(true);
+        return f.get(object);
+    }
+
+    // set a value for an inaccessible field
+    private void setProtected(Object object, String field, Object value) throws Exception {
+        Field f = object.getClass().getDeclaredField(field);
+        f.setAccessible(true);
+        f.set(object, value);
+    }
+
     public static class FluentAttr extends Attr {
         Context context;
 
-        protected FluentAttr(Context context) {
+        public FluentAttr(Context context) {
             super(context);
             this.context = context;
         }
@@ -95,7 +120,7 @@ public class Fluent implements Plugin {
                 return new FluentAttr(context);
             }
         }
-        
+
         // transform the abstract syntax tree when an object method is not found
         @Override
         public void visitApply(JCMethodInvocation tree) {
@@ -131,7 +156,7 @@ public class Fluent implements Plugin {
                           List<Type> typeargtypes, boolean boxing, boolean varargs) {
             Symbol symbol = super.findMethod(env, site, name, argtypes, typeargtypes, boxing, varargs);
             if (symbol.kind == Kinds.Kind.ABSENT_MTH
-                    && env.tree instanceof JCMethodInvocation 
+                    && env.tree instanceof JCMethodInvocation
                     && ((JCMethodInvocation) env.tree).getMethodSelect() instanceof JCFieldAccess) {
                 throw new AbsentMethodException();
             }
