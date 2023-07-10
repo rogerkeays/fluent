@@ -3,7 +3,7 @@
 # build configuration
 GROUP=jamaica
 NAME=fluent
-VERSION=0.2.0
+VERSION=0.2.1
 TARGET=9
 
 # use sun package to override package methods
@@ -19,7 +19,7 @@ TEST_CLASSPATH=$JAR
 
 # directories containing jdks to test against, separated by spaces
 JDKS="$JAVA_HOME"
-#JDKS="$HOME/tools/jdk-*"
+[ "$1" = "all" ] && JDKS="$HOME/tools/jdk-*"
 
 # compile and build jar
 # note: -source 8 is required to import com.sun.tools.javac.*
@@ -28,7 +28,7 @@ echo $JAVA_HOME
 [ -d target ] && rm -r target
 mkdir -p target/META-INF/services
 echo "$PACKAGE.$CLASSNAME" > target/META-INF/services/com.sun.source.util.Plugin
-$JAVA_HOME/bin/javac -Xlint:unchecked -nowarn -source 8 -target $TARGET -d target $CLASSNAME.java
+$JAVA_HOME/bin/javac -Xlint:unchecked -nowarn -source 8 -target $TARGET -d target $CLASSNAME*.java
 [ $? -eq 0 ] || exit 1
 cd target; $JAVA_HOME/bin/jar --create --file ../$JAR *; cd ..
 
