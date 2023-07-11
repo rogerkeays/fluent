@@ -130,7 +130,7 @@ Language design can be a divisive topic. Some interesting threads around extensi
 
 ## Related Resources
 
-  * [Jamaica](http://patreon.org/Jamaica440): support us on Patreon 🍻.
+  * [Jamaica](https://patreon.com/Jamaica440): our project's Patreon page. If you find *Fluent* useful, please support us 🍻.
   * [Kotlin](https://kotlinlang.org): a JVM language which supports extension methods out of the box.
   * [Lombok](https://github.com/projectlombok/lombok): the grand-daddy of `javac` hacks, with experimental support for extension methods.
   * [Manifold](https://manifold.systems): a `javac` plugin with many features, including extension methods.
