@@ -108,7 +108,7 @@ To ensure backwards compatibility with existing code, *Fluent* has been used to 
 
 ## IDE Support
 
-There is currently no IDE support for *Fluent*. Contributions are welcome. It may be possible to get your IDE to load the *Fluent* plugin into it's compiler. If you get it working, please [comment on issue #4](https://github.com/rogerkeays/fluent/issues/4) so we can all benefit.
+There is currently no IDE support for *Fluent*. Contributions are welcome. If you cannot contribute code, please consider [supporting us on Patreon](https://patreon.com/Jamaica440).
 
 ## Known Issues
 
@@ -130,6 +130,7 @@ Language design can be a divisive topic. Some interesting threads around extensi
 
 ## Related Resources
 
+  * [Jamaica](http://patreon.org/Jamaica440): support us on Patreon 🍻.
   * [Kotlin](https://kotlinlang.org): a JVM language which supports extension methods out of the box.
   * [Lombok](https://github.com/projectlombok/lombok): the grand-daddy of `javac` hacks, with experimental support for extension methods.
   * [Manifold](https://manifold.systems): a `javac` plugin with many features, including extension methods.
