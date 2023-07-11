@@ -130,12 +130,12 @@ Language design can be a divisive topic. Some interesting threads around extensi
 
 ## Related Resources
 
-  * [Jamaica](https://patreon.com/Jamaica440): our project's Patreon page. If you find *Fluent* useful, please support us 🍻.
+  * [Jamaica](https://patreon.com/Jamaica440): our project's Patreon page. If you use *Fluent*, please support us 🍻.
+  * [Unchecked](https://github.com/rogerkeays/unchecked): compiler plugin to disable checked exceptions (also part of Jamaica).
   * [Kotlin](https://kotlinlang.org): a JVM language which supports extension methods out of the box.
   * [Lombok](https://github.com/projectlombok/lombok): the grand-daddy of `javac` hacks, with experimental support for extension methods.
   * [Manifold](https://manifold.systems): a `javac` plugin with many features, including extension methods.
   * [racket-fluent](https://github.com/rogerkeays/racket-fluent): fluent syntax for Racket.
-  * [Unchecked](https://github.com/rogerkeays/unchecked): a similar compiler plugin to disable checked exceptions.
   * [More stuff you never knew you wanted](https://rogerkeays.com).
 
 ## Disclaimer
