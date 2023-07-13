@@ -68,6 +68,27 @@ And configure the compiler plugin:
 
 Note, older versions of the compiler plugin use a different syntax. Refer to the [Maven Compiler Plugin docs](https://maven.apache.org/plugins/maven-compiler-plugin/compile-mojo.html) for more details. Make sure you add the `<fork>true</fork>` option too.
 
+## Install Using Gradle
+
+Add the following to your `build.gradle`:
+
+    dependencies {
+        compileOnly 'io.github.rogerkeays:fluent:0.3.1'
+        testCompileOnly 'io.github.rogerkeays:fluent:0.3.1'
+    }
+    tasks.withType( JavaCompile ) {
+        options.compilerArgs += [ '-Xplugin:fluent' ]
+        options.fork = true
+        options.forkOptions.jvmArgs += [ '--add-opens=java.base/java.lang=ALL-UNNAMED']
+    }
+
+If your build is using annotations, change the dependency tasks as follows:
+
+    dependencies {
+        annotationProcessor 'io.github.rogerkeays:fluent:0.3.1'
+        testAnnotationProcessor 'io.github.rogerkeays:fluent:0.3.1'
+    }
+
 ## Build It Yourself
 
 *Fluent* is built using a POSIX shell script:
