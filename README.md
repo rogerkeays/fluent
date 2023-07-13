@@ -71,7 +71,7 @@ Add the following to your `build.gradle`:
         options.forkOptions.jvmArgs += [ '--add-opens=java.base/java.lang=ALL-UNNAMED']
     }
 
-If your build is using annotations, change the dependency tasks as follows:
+If your build is using an annotations processor, change the dependency tasks to:
 
     dependencies {
         annotationProcessor 'io.github.rogerkeays:fluent:0.3.1'
