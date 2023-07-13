@@ -39,17 +39,12 @@ Run your code like you always have:
 
 ## Install Using Maven
 
-*Fluent* is not yet available on Maven Central, however you can install it locally like this:
-
-    wget https://github.com/rogerkeays/fluent/raw/main/fluent.jar
-    mvn install:install-file -DgroupId=jamaica -DartifactId=fluent -Dversion=0.1.0 -Dpackaging=jar -Dfile=fluent.jar
-    
-Next, add the dependency to your `pom.xml`:
+Add the following dependency to your `pom.xml`:
 
     <dependency>
-      <groupId>jamaica</groupId>
+      <groupId>io.github.rogerkeays</groupId>
       <artifactId>fluent</artifactId>
-      <version>0.1.0</version>
+      <version>0.3.1</version>
       <scope>compile</scope>
     </dependency>
 
@@ -79,7 +74,7 @@ Note, older versions of the compiler plugin use a different syntax. Refer to the
 
     git clone https://github.com/rogerkeays/fluent.git
     cd fluent
-    ./build.sh
+    ./build.sh install
 
 ## JDK Support
 
