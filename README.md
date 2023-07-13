@@ -26,17 +26,6 @@ Extension methods are useful when you can't (or don't want to) add methods to a 
 
 *Fluent* supports JDK 9 and above.
 
-## Quick Start
-
-Download the jar, place it on your classpath, and run `javac` with `-Xplugin:fluent` and `-J--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED`:
-
-    wget https://github.com/rogerkeays/fluent/raw/main/fluent.jar
-    javac -cp fluent.jar -Xplugin:fluent -J--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED Test.java
-
-Run your code like you always have:
-
-    java Test
-
 ## Install Using Maven
 
 Add the following dependency to your `pom.xml`:
@@ -88,6 +77,17 @@ If your build is using annotations, change the dependency tasks as follows:
         annotationProcessor 'io.github.rogerkeays:fluent:0.3.1'
         testAnnotationProcessor 'io.github.rogerkeays:fluent:0.3.1'
     }
+
+## Use From The Command Line
+
+Download the jar, place it on your classpath, and run `javac` with `-Xplugin:fluent` and `-J--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED`:
+
+    wget https://github.com/rogerkeays/fluent/raw/main/fluent.jar
+    javac -cp fluent.jar -Xplugin:fluent -J--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED Test.java
+
+Run your code like you always have:
+
+    java Test
 
 ## Build It Yourself
 
