@@ -124,7 +124,7 @@ To ensure backwards compatibility with existing code, *Fluent* has been used to 
 
 ## IDE Support
 
-There is currently no IDE support for *Fluent*. Contributions are welcome. If you cannot contribute code, please consider [supporting us on Patreon](https://patreon.com/Jamaica440).
+There is currently no IDE support for *Fluent*. Contributions are welcome. If you cannot contribute code, please consider [funding this feature on Patreon](https://patreon.com/Jamaica440).
 
 ## Known Issues
 
