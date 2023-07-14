@@ -82,8 +82,8 @@ If your build is using an annotations processor, change the dependency tasks to:
 
 Download the jar, place it on your classpath, and run `javac` with `-Xplugin:fluent` and `-J--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED`:
 
-    wget https://github.com/rogerkeays/fluent/raw/main/fluent.jar
-    javac -cp fluent.jar -Xplugin:fluent -J--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED Test.java
+    wget https://repo.maven.apache.org/maven2/io/github/rogerkeays/fluent/0.3.1/fluent-0.3.1.jar
+    javac -cp fluent-0.3.1.jar -Xplugin:fluent -J--add-opens=java.base/java.lang=ALL-UNNAMED Test.java
 
 Run your code like you always have:
 
